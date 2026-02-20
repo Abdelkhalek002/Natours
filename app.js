@@ -19,6 +19,7 @@ import viewRouter from './routes/viewsRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Start Express App
 const app = express();
 
 app.set('view engine', 'pug');
