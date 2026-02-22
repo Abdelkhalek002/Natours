@@ -740,6 +740,6 @@ const bookTour = async (tourId)=>{
     }
 };
 
-},{"axios":"6zvCG","@parcel/transformer-js/src/esmodule-helpers.js":"cnMXi","../js/alerts.js":"7jKzU"}]},["9z1e2"], null, "parcelRequire8e08", {})
+},{"axios":"6zvCG","../js/alerts.js":"7jKzU","@parcel/transformer-js/src/esmodule-helpers.js":"cnMXi"}]},["9z1e2"], null, "parcelRequire8e08", {})
 
 //# sourceMappingURL=stripe.aaa73846.js.map
