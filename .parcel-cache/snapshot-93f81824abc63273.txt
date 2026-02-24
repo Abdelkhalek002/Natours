@@ -279,7 +279,7 @@
 127E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\workers\test\integration134148627354330961 1
 148E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@swc\helpers\_\_interop_require_wildcard\package.json134148635396573025 0
 111E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\public\img\tours\tour-7-1.jpg132475715300000000 0
-98E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\views\signup.pug134162609869249344 0
+98E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\views\signup.pug134162623833705495 0
 112E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\countBy.js134148635396874920 0
 142E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\mongodb-connection-string-url\lib\redact.js.map134148635387148231 0
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\axios\dist\esm\axios.js134153998489772735 0
@@ -455,7 +455,7 @@
 119E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\yocto-queue\package.json134148635382674746 0
 123E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\sparse-bitfield\package.json134148635375931149 0
 134E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\supports-preserve-symlinks-flag\LICENSE134148635382626948 0
-98E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\public\img\users134154600868744297 1
+98E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\public\img\users134164386515550947 1
 120E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\tr46\lib\statusMapping.js134148635385259209 0
 100E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\fresh134148635385284451 1
 113E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\type-is\HISTORY.md134148635381277344 0
@@ -534,13 +534,6 @@
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\dotenv-expand\config.js134148627352045346 0
 127E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\resolve\lib\normalize-options.js134148635393984178 0
 109E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\public\img\users\user-5.jpg132475715300000000 0
-113E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\fp\isNaN.js134148635404987674 0
-154E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@swc\helpers\_\_class_extract_field_descriptor\package.json134148635396101166 0
-128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\svg.js134148627384036064 0
-128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\PromiseQueue.js134148627357259075 0
-147E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\public\img\users\user-5c8a1d5b0190b214360dc057-1770986413479.jpeg134154600137330000 0
-105E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\typedarray134153994183758640 1
-110E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\every.js134148635397473800 0
 147E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\public\img\users\user-5c8a1f292f8fb814b56fa184-1770948880337.jpeg134154224803378039 0
 103E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\raw-body134148635385464712 1
 117E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\fp\fromPairs.js134148635402497918 0
@@ -1270,6 +1263,8 @@
 101E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\espree134148635388463620 1
 122E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\object-inspect\test\browser134148635388110657 1
 131E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\utility-types\dist\mapped-types.d.ts134148627355344642 0
+119E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\_baseEachRight.js134148635391918031 0
+132E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\stripe\lib\resources\EphemeralKeys.js134158121904035611 0
 104E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\esrecurse134148635385284451 1
 119E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\_baseFunctions.js134148635392364837 0
 108E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\tr46\index.js134148635375654195 0
@@ -1735,6 +1730,8 @@
 105E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\type-check134148635386609344 1
 102E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\type-is134148635385269380 1
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\with\lib\reference.d.ts134148635390185840 0
+105E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\typedarray134153994183758640 1
+110E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\every.js134148635397473800 0
 117E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\acorn-jsx\package.json134148635385128905 0
 150E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\core\test\fixtures\invalid-engines\package.json134148627379005075 0
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\validator\lib\isPort.js134148635395688962 0
@@ -1961,7 +1958,7 @@
 122E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\path-to-regexp\package.json134148635383295708 0
 128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\postcss-value-parser\package.json134148635387572481 0
 120E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\_createAssigner.js134148635394420694 0
-101E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\models\userModel.js134158416877137188 0
+101E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\models\userModel.js134164397434186434 0
 116E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\void-elements\LICENSE134148635382648180 0
 128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\validator\es\lib\isHexadecimal.js134148635394237812 0
 121E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\watcher\wrapper.js134148627356802081 0
@@ -2864,8 +2861,6 @@
 144E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\css-read-only-write.js134148627379334266 0
 131E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\workers\lib\web\WebWorker.js134148627356966518 0
 130E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\stripe\lib\resources\CreditNotes.js134158121903311510 0
-119E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\_baseEachRight.js134148635391918031 0
-132E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\stripe\lib\resources\EphemeralKeys.js134158121904035611 0
 132E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\stripe\lib\resources\ExchangeRates.js134158121904096676 0
 120E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\math-intrinsics\constants134148635391531305 1
 112E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\parcel\lib\cli.js134148635385755665 0
@@ -6077,6 +6072,8 @@
 124E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\eslint\lib\rules\id-length.js134148635395274404 0
 126E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\regions\CF.js134148627366275380 0
 119E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\fp\isMatchWith.js134148635404967729 0
+113E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\fp\isNaN.js134148635404987674 0
+154E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@swc\helpers\_\_class_extract_field_descriptor\package.json134148635396101166 0
 116E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\fp\isNative.js134148635405008688 0
 104E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\debug\src134148635386443937 1
 113E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\lodash\fp\isNil.js134148635405018901 0
@@ -8176,6 +8173,7 @@
 137E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\svg-fragment.js134148627383995682 0
 133E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\svg-html.js134148627384005703 0
 133E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\svg-smil.js134148627384026042 0
+128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\svg.js134148627384036064 0
 128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\sxg.js134148627384046146 0
 138E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\caniuse-lite\data\features\tabindex-attr.js134148627384066538 0
 120E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\axios\dist\node\axios.cjs134153998489076940 0
@@ -8410,7 +8408,7 @@
 124E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\axios\lib\helpers\throttle.js134153998490348917 0
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\core\src\public134148627373457500 1
 132E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\axios\lib\helpers\toURLEncodedForm.js134153998490380924 0
-95E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data134122113605225199 1
+95E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data134164396911246567 1
 127E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\axios\lib\helpers\trackStream.js134153998490390892 0
 125E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\axios\lib\helpers\validator.js134153998490450733 0
 135E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\profiler\src\SamplingProfiler.js134148627352681600 0
@@ -8447,6 +8445,7 @@
 114E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\asap\browser-raw.js134148635385418839 0
 112E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\asap\package.json134148635375665871 0
 109E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\asap\README.md134148635380980901 0
+110E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\EGY-tours.json134164417059927062 0
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\array-flatten\README.md134148635381302322 0
 111E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\argparse\LICENSE134148635379499508 0
 116E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\argparse\package.json134148635386951667 0
@@ -8903,6 +8902,7 @@
 120E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\path.js134148627357154655 0
 128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\prettifyTime.js134148627357166037 0
 132E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\progress-message.js134148627357245083 0
+128E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\PromiseQueue.js134148627357259075 0
 134E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\relativeBundlePath.js134148627357327853 0
 127E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\relativeUrl.js134148627357339502 0
 129E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\node_modules\@parcel\utils\src\shared-buffer.js134148627357447240 0
@@ -9889,11 +9889,11 @@
 118E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\templates\loginTemplate.pug132475715300000000 0
 104E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\img\aarav.jpg132475715300000000 0
 105E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\img\monica.jpg132475715300000000 0
-114E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\import-dev-data.js134155821552672093 0
+114E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\import-dev-data.js134164411402455875 0
 104E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\tour5.js132475715300000000 0
 113E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\tours-simple.json134122098630088738 0
 106E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\tours.json132475715300000000 0
-106E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\users.json132475715300000000 0
+106E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\dev-data\data\users.json134164388917022687 0
 111E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\controllers\authController.js134156610603699801 0
 113E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\controllers\reviewController.js134143478373223790 0
 111E:\01-Computer-Science\web-dev\03-backend-dev\projects\portfolio-projects\Natours\controllers\tourController.js134155840579665573 0
