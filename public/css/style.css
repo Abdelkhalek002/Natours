@@ -853,6 +853,31 @@ body {
   font-weight: 400;
 }
 
+/* Remove overlapping layout on tablet and below */
+@media only screen and (max-width: 56.25em) {
+
+  .cta {
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  /* Hide decorative overlapping images */
+  .cta__img {
+    display: none;
+  }
+
+  .cta__content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+@media only screen and (max-width: 37.5em) {
+  .cta {
+    padding: 3rem 1.5rem;
+  }
+}
+
+
 .user-view {
   background-color: #fff;
   max-width: 120rem;
