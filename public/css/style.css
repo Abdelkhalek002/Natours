@@ -1,5 +1,15 @@
 :root {
   --section-rotate: 9vw;
+
+  /* =============================================
+     Responsive Design Tokens (T002)
+     Breakpoints use em units (browser default 16px)
+     so they are unaffected by our 62.5% html font-size.
+     ============================================= */
+  --bp-phone:    37.5em;   /* 600px  */
+  --bp-tab-port: 56.25em;  /* 900px  */
+  --bp-tab-land: 75em;     /* 1200px */
+  --bp-desktop:  112.5em;  /* 1800px */
 }
 
 ::-moz-selection {
@@ -21,6 +31,19 @@
   box-sizing: inherit;
 }
 
+/* =============================================
+   Global Fluid Media Reset (T003)
+   Ensures images, videos, and iframes never
+   overflow their containers on any viewport.
+   ============================================= */
+img,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 html {
   font-size: 62.5%;
   -webkit-box-sizing: border-box;
@@ -32,7 +55,8 @@ body {
   font-weight: 300;
   font-family: 'Lato', sans-serif;
   color: #777;
-  padding: 2rem;
+  /* T005: fluid padding — zero on mobile, restored on desktop */
+  padding: 0;
   min-height: 100vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -42,14 +66,30 @@ body {
   -ms-flex-direction: column;
   flex-direction: column;
 }
+@media only screen and (min-width: 56.25em) {
+  body {
+    padding: 2rem;
+  }
+}
 
 .main {
   background-color: #f7f7f7;
-  padding: 8rem 6rem;
+  /* T005: fluid padding — tighter on mobile, generous on desktop */
+  padding: 4rem 1.5rem;
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
   position: relative;
+}
+@media only screen and (min-width: 37.5em) {
+  .main {
+    padding: 6rem 3rem;
+  }
+}
+@media only screen and (min-width: 56.25em) {
+  .main {
+    padding: 8rem 6rem;
+  }
 }
 
 .flex {
@@ -63,8 +103,18 @@ body {
 }
 
 .container {
+  /* T004: fluid container with horizontal padding guard on small screens */
   max-width: 120rem;
+  width: 100%;
   margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media only screen and (min-width: 56.25em) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .ma-bt-md {
@@ -111,7 +161,8 @@ body {
 }
 
 .heading-secondary {
-  font-size: 2.25rem;
+  /* T006: fluid typography */
+  font-size: clamp(1.8rem, 3.5vw, 2.25rem);
   text-transform: uppercase;
   font-weight: 700;
   background-image: -webkit-gradient(
@@ -123,6 +174,7 @@ body {
   );
   background-image: linear-gradient(to right, #7dd56f, #28b487);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
   letter-spacing: 0.1rem;
   line-height: 1.3;
@@ -167,9 +219,11 @@ body {
 }
 
 .heading-primary {
-  font-size: 5rem;
+  /* T006: fluid typography — scales from 2.8rem (mobile) up to 5rem (desktop) */
+  font-size: clamp(2.8rem, 6vw, 5rem);
   text-align: center;
-  width: 70%;
+  /* T005: fluid width — full width on mobile, constrained on desktop */
+  width: clamp(90%, 70vw, 70%);
   margin: 0 auto;
 }
 
@@ -188,6 +242,8 @@ body {
 .btn:visited {
   font-size: 1.6rem;
   padding: 1.4rem 3rem;
+  /* T011 [US1]: ensure minimum touch target height on mobile */
+  min-height: 4.4rem;
   border-radius: 10rem;
   text-transform: uppercase;
   display: inline-block;
@@ -300,7 +356,8 @@ body {
 
 .header {
   background-color: #444;
-  padding: 0 5rem;
+  /* T009 [US1]: fluid padding — tighter on small screens */
+  padding: 0 1.5rem;
   height: 8rem;
   position: relative;
   z-index: 100;
@@ -314,12 +371,24 @@ body {
   -ms-flex-align: center;
   align-items: center;
 }
+@media only screen and (min-width: 37.5em) {
+  .header {
+    padding: 0 3rem;
+  }
+}
+@media only screen and (min-width: 56.25em) {
+  .header {
+    padding: 0 5rem;
+  }
+}
 @media only screen and (max-width: 62.5em) {
   .header {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
+    height: auto;
+    padding: 1.5rem;
   }
 }
 .header__logo img {
@@ -429,17 +498,40 @@ body {
 .section-description {
   background-color: #fcfcfc;
   margin-top: calc(0px - var(--section-rotate));
+  /* T008 [US1]: stack vertically on mobile by default */
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 .section-description > * {
-  padding: 0 8vw;
-  padding-top: 14vw;
+  padding: 0 6vw;
+  padding-top: 10vw;
   padding-bottom: calc(1vw + var(--section-rotate));
+  /* T008 [US1]: full width on mobile, 50% on tablet+ */
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 50%;
-  flex: 0 0 50%;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+}
+/* T008 [US1]: restore side-by-side on tablet portrait and above */
+@media only screen and (min-width: 56.25em) {
+  .section-description {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  .section-description > * {
+    padding: 0 8vw;
+    padding-top: 14vw;
+    padding-bottom: calc(1vw + var(--section-rotate));
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+  }
 }
 
 .description-box .description {
@@ -689,10 +781,16 @@ body {
   margin: 0 auto;
   overflow: hidden;
   background-color: #fff;
-  padding: 9rem 5rem 9rem 21rem;
+  /* T018 [Polish]: mobile uses simple even padding, no room for overlapping circles */
+  padding: 4rem 2rem;
   border-radius: 2rem;
   -webkit-box-shadow: 0 3rem 8rem 0.5rem rgba(0, 0, 0, 0.15);
   box-shadow: 0 3rem 8rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+@media only screen and (min-width: 56.25em) {
+  .cta {
+    padding: 9rem 5rem 9rem 21rem;
+  }
 }
 .cta__img {
   height: 15rem;
@@ -764,14 +862,29 @@ body {
   overflow: hidden;
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.07);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.07);
+  /* T010 [US1]: stack sidebar and content vertically on mobile */
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+@media only screen and (min-width: 56.25em) {
+  .user-view {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
 }
 .user-view__menu {
-  -webkit-box-flex: 32rem;
-  -ms-flex: 32rem 0 0px;
-  flex: 32rem 0 0;
+  /* T010 [US1]: on mobile this is full-width horizontal bar */
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 100%;
   background-image: -webkit-gradient(
     linear,
     left top,
@@ -780,7 +893,16 @@ body {
     to(#28b487)
   );
   background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
-  padding: 4rem 0;
+  padding: 2rem 0;
+}
+@media only screen and (min-width: 56.25em) {
+  .user-view__menu {
+    -webkit-box-flex: 32rem;
+    -ms-flex: 32rem 0 0px;
+    flex: 32rem 0 0;
+    width: auto;
+    padding: 4rem 0;
+  }
 }
 .user-view__content {
   -webkit-box-flex: 1;
@@ -790,36 +912,63 @@ body {
 }
 .user-view__form-container {
   max-width: 68rem;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 8rem;
+  /* T013 [US2]: fluid padding — tighter on mobile, full on desktop */
+  padding: 0 2rem;
 }
-
-.footer {
-  background-color: #f7f7f7;
-  padding: 6rem 4rem 3rem 4rem;
-  font-size: 1.4rem;
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-row-gap: 0.75rem;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-@media only screen and (max-width: 50em) {
-  .footer {
-    grid-template-columns: 1fr;
-    grid-row-gap: 1.25rem;
-    justify-items: center;
+@media only screen and (min-width: 37.5em) {
+  .user-view__form-container {
+    padding: 0 4rem;
   }
 }
+@media only screen and (min-width: 56.25em) {
+  .user-view__form-container {
+    padding: 0 8rem;
+  }
+}
+
+/* T014 [US2]: footer tablet layout — already handled by existing
+   max-width: 50em media query which stacks to 1fr column on mobile.
+   Adding mobile-first fluid padding. */
+.footer {
+  background-color: #f7f7f7;
+  /* T015 [US3]: fluid footer padding */
+  padding: 4rem 1.5rem 2rem 1.5rem;
+  font-size: 1.4rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1.25rem;
+  justify-items: center;
+}
+@media only screen and (min-width: 37.5em) {
+  .footer {
+    padding: 5rem 3rem 2.5rem 3rem;
+    grid-template-columns: auto auto;
+    grid-row-gap: 0.75rem;
+    justify-items: unset;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+@media only screen and (min-width: 56.25em) {
+  .footer {
+    padding: 6rem 4rem 3rem 4rem;
+  }
+}
+@media only screen and (max-width: 50em) {
+  /* REMOVED: now using mobile-first approach — 1fr mobile grid is the base */
+}
 .footer__logo {
-  grid-row: 1 / 3;
+  /* T017 [US3]: on desktop, span both rows for visual balance */
+  grid-row: auto;
   -ms-flex-item-align: center;
   align-self: center;
 }
-@media only screen and (max-width: 50em) {
+@media only screen and (min-width: 37.5em) {
   .footer__logo {
-    grid-row: 1;
+    grid-row: 1 / 3;
   }
 }
 .footer__logo img {
@@ -845,12 +994,13 @@ body {
   color: #55c57a;
 }
 .footer__copyright {
-  justify-self: end;
+  justify-self: center;
   color: #999;
 }
-@media only screen and (max-width: 50em) {
+/* T014 [US2]: restore end-alignment on bigger screens */
+@media only screen and (min-width: 37.5em) {
   .footer__copyright {
-    justify-self: center;
+    justify-self: end;
   }
 }
 
@@ -983,7 +1133,8 @@ body {
   color: #f7f7f7;
   padding-bottom: 3px;
   border-bottom: 1px solid #999;
-  width: 18rem;
+  /* T018 [Polish]: fluid width — clamp prevents overflow on small screens */
+  width: clamp(10rem, 20vw, 18rem);
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
@@ -1001,7 +1152,7 @@ body {
 }
 .nav__search-input:focus {
   outline: none;
-  width: 25rem;
+  width: clamp(10rem, 25vw, 25rem);
   border-bottom: 1px solid currentColor;
 }
 .nav__user-img {
@@ -1070,11 +1221,30 @@ body {
 }
 
 .card-container {
+  /* T007 [US1]: mobile-first — single column by default */
   max-width: 120rem;
   margin: 0 auto;
+  padding: 0 1.5rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 7rem;
+  grid-template-columns: 1fr;
+  grid-gap: 4rem;
+}
+/* T012 [US2]: 2-column grid at tablet portrait (600px+) */
+@media only screen and (min-width: 37.5em) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5rem;
+  }
+}
+/* T016 [US3]: 3-column grid at tablet landscape / desktop (1200px+) */
+@media only screen and (min-width: 75em) {
+  .card-container {
+    /* T017 [US3]: 7rem gap restored, horizontal padding can be removed
+       as the container max-width handles centring */
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 7rem;
+    padding: 0;
+  }
 }
 
 .card {
@@ -1224,21 +1394,45 @@ body {
 .login-form {
   margin: 0 auto;
   max-width: 55rem;
+  width: 100%;
   background-color: #fff;
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
-  padding: 5rem 7rem;
+  /* T018 [Polish]: fluid padding for small screens */
+  padding: 4rem 2rem;
   border-radius: 5px;
+}
+@media only screen and (min-width: 37.5em) {
+  .login-form {
+    padding: 5rem 5rem;
+  }
+}
+@media only screen and (min-width: 56.25em) {
+  .login-form {
+    padding: 5rem 7rem;
+  }
 }
 
 .signup-form {
   margin: 0 auto;
   max-width: 55rem;
+  width: 100%;
   background-color: #fff;
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
-  padding: 5rem 7rem;
+  /* T018 [Polish]: fluid padding for small screens */
+  padding: 4rem 2rem;
   border-radius: 5px;
+}
+@media only screen and (min-width: 37.5em) {
+  .signup-form {
+    padding: 5rem 5rem;
+  }
+}
+@media only screen and (min-width: 56.25em) {
+  .signup-form {
+    padding: 5rem 7rem;
+  }
 }
 
 .form__input {

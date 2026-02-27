@@ -1,3 +1,19 @@
 node_modules/
 *.env
 .gemini/
+.agent/
+
+# Build outputs
+dist/
+build/
+.parcel-cache/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
