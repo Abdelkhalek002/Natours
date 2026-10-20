@@ -27,6 +27,7 @@ This project includes:
 ```text
 Natours/
   src/
+    config/           # Centralized environment configuration
     controllers/      # Route handlers and business logic
     middlewares/      # Express middlewares (auth, errors)
     models/           # Mongoose models

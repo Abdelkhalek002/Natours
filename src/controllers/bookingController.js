@@ -3,7 +3,9 @@ import Tour from '../models/tourModel.js';
 import Booking from '../models/bookingModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import * as factory from './handlerFactory.js';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+import config from '../config/index.js';
+
+const stripe = new Stripe(config.stripe.secretKey);
 
 export const getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) get the currently booked tour

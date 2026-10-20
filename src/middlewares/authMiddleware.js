@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/appError.js';
+import config from '../config/index.js';
 
 /**
  * Protect routes by verifying JWT token from Authorization header or cookie
@@ -27,7 +28,7 @@ export const protect = catchAsync(async (req, res, next) => {
   }
 
   // 2) Token verification
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, config.jwt.secret);
 
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
@@ -59,7 +60,7 @@ export const isLoggedIn = catchAsync(async (req, res, next) => {
       // 1) Token verification
       const decoded = await promisify(jwt.verify)(
         req.cookies.jwt,
-        process.env.JWT_SECRET,
+        config.jwt.secret,
       );
 
       // 2) Check if user still exists

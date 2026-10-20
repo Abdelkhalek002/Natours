@@ -8,6 +8,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 import cookieParser from 'cookie-parser';
 
+import config from './config/index.js';
 import AppError from './utils/appError.js';
 import globalErrorHandler from './middlewares/errorMiddleware.js';
 import tourRouter from './routes/tourRoutes.js';
@@ -30,12 +31,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Set security HTTP headers
-if (process.env.NODE_ENV === 'production') {
+if (config.isProduction) {
   app.use(helmet());
 }
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+if (config.isDevelopment) {
   app.use(morgan('dev'));
 }
 

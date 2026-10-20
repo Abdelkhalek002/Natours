@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import pug from 'pug';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import config from '../config/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,27 +12,27 @@ export default class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Abdelkhalek Mahmoud <${process.env.EMAIL_FROM}>`;
+    this.from = config.email.from;
   }
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
-      // sendGrid
+    if (config.isProduction) {
+      // SendGrid
       return nodemailer.createTransport({
         host: 'smtp.sendgrid.net',
         port: 587,
         secure: false,
         auth: {
-          user: process.env.SENDGRID_USERNAME,
-          pass: process.env.SENDGRID_PASSWORD,
+          user: config.email.sendgridUsername,
+          pass: config.email.sendgridPassword,
         },
       });
     }
     return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
+      host: config.email.host,
+      port: config.email.port,
       auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD,
+        user: config.email.username,
+        pass: config.email.password,
       },
     });
   }
