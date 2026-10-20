@@ -35,7 +35,8 @@ Natours/
   dev-data/           # Seed/import data and template helpers
   app.js              # Express app config and middleware
   server.js           # App bootstrap and DB connection
-  config.env          # Environment variables (local)
+  .env.example        # Environment variables template
+  .env                # Local environment variables (git-ignored)
 ```
 
 ## Features
@@ -79,26 +80,38 @@ npm install
 
 ## Environment Variables
 
-Create `config.env` in the project root (or update existing one) with values similar to:
+Copy the example environment template into `.env`:
+
+```bash
+# On Linux / macOS
+cp .env.example .env
+
+# On Windows PowerShell
+copy .env.example .env
+```
+
+The `.env` file should contain values similar to:
 
 ```env
 NODE_ENV=development
 PORT=8000
 
-DATABASE_LOCAL=mongodb://127.0.0.1:27017/natours
-# Optional hosted DB style variables used in commented code:
-# DATABASE=your_connection_string_with_<PASSWORD>
+# Cloud MongoDB Atlas (Recommended for reviewers - no local setup required)
+# DATABASE=mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.xxxx.mongodb.net/natours?retryWrites=true&w=majority
 # DATABASE_PASSWORD=your_password
 
-JWT_SECRET=your-super-secret-key
+# Local MongoDB (Default if DATABASE is not provided)
+DATABASE_LOCAL=mongodb://127.0.0.1:27017/natours
+
+JWT_SECRET=your-super-secret-key-at-least-32-chars
 JWT_EXPIRES_IN=90d
 JWT_COOKIE_EXPIRES_IN=90
 
 STRIPE_SECRET_KEY=sk_test_xxx
 
 EMAIL_FROM=Your Name <noreply@example.com>
-EMAIL_HOST=smtp.example.com
-EMAIL_PORT=587
+EMAIL_HOST=sandbox.smtp.mailtrap.io
+EMAIL_PORT=2525
 EMAIL_USERNAME=your_smtp_username
 EMAIL_PASSWORD=your_smtp_password
 
@@ -167,7 +180,7 @@ npm run watch:js
 
 ## Notes
 
-- `server.js` currently connects using `DATABASE_LOCAL`.
+- `server.js` dynamically connects to MongoDB Cloud (Atlas) if `DATABASE` is specified, or falls back to `DATABASE_LOCAL`.
 - `helmet` is enabled in production mode.
 - Request logs via `morgan` are enabled in development mode.
 

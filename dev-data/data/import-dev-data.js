@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: './config.env', debug: false });
+dotenv.config({ path: './.env' });
 import mongoose from 'mongoose';
 import fs from 'fs';
 import Tour from '../../models/tourModel.js';
@@ -11,19 +11,22 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-/*const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD,
-);*/
-
-const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE
+  ? process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
+  : process.env.DATABASE_LOCAL;
 
 (async function connectDB() {
   try {
+    if (!DB) {
+      console.error(
+        'No database connection string found in .env (specify DATABASE or DATABASE_LOCAL)',
+      );
+      process.exit(1);
+    }
     await mongoose.connect(DB);
-    console.log('✅ Database connection successful!');
+    console.log('Database connection successful!');
   } catch (error) {
-    console.error('❌ Connection to database failed:', error);
+    console.error('Connection to database failed:', error);
   }
 })();
 

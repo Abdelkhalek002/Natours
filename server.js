@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: './config.env', debug: false });
+dotenv.config({ path: './.env' });
 
 import mongoose from 'mongoose';
 
@@ -14,16 +14,20 @@ process.on('uncaughtException', (err) => {
 const { default: app } = await import('./app.js'); // es modules are hoisted (did this to solve .env load before app.js)
 //import app from './app.js';
 
-/*const db = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD,
-);*/
-
-const db = process.env.DATABASE_LOCAL;
+const db = process.env.DATABASE
+  ? process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
+  : process.env.DATABASE_LOCAL;
 
 async function connectDB() {
+  if (!db) {
+    console.error(
+      'Error: No database connection string found in .env (specify DATABASE or DATABASE_LOCAL)',
+    );
+    process.exit(1);
+  }
   await mongoose.connect(db);
-  console.log('✅ Local Database connection successful!');
+  const dbType = process.env.DATABASE ? 'Cloud (Atlas)' : 'Local';
+  console.log(`${dbType} Database connection successful!`);
 }
 connectDB();
 
