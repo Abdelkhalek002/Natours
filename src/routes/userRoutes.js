@@ -5,28 +5,28 @@ import { protect, restrictTo } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-// Allowed for the public
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
-router.get('/logout', authController.logOut);
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
-
-// Protected Routes
+// All routes after this middleware require authentication
 router.use(protect);
-router.patch('/updateMyPassword', authController.updatePassword);
-router.get('/Me', userController.getMe, userController.getUser);
-router.patch(
-  '/updateMe',
-  userController.uploadUserPhoto,
-  userController.resizeUserPhoto,
-  userController.updateMe,
-);
-router.delete('/deleteMe', userController.deleteMe);
 
-// Restricted To Admins Only
+// Password update for authenticated user
+router.patch('/updateMyPassword', authController.updatePassword);
+
+// Current user profile resource (Read, Update, Deactivate)
+router
+  .route('/me')
+  .get(userController.getMe, userController.getUser)
+  .patch(
+    userController.uploadUserPhoto,
+    userController.resizeUserPhoto,
+    userController.updateMe,
+  )
+  .delete(userController.deleteMe);
+
+// Restrict all remaining endpoints to Admins only
 router.use(restrictTo('admin'));
+
 router.route('/').get(userController.getAllUsers);
+
 router
   .route('/:id')
   .get(userController.getUser)

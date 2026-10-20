@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.use('/:tourId/reviews', reviewRouter);
 
-router.route('/tour-stats').get(tourController.getTourStats);
+router.route('/stats').get(tourController.getTourStats);
 router
   .route('/monthly-plan/:year')
   .get(

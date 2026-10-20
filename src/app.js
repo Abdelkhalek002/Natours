@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 import config from './config/index.js';
 import AppError from './utils/appError.js';
 import globalErrorHandler from './middlewares/errorMiddleware.js';
+import authRouter from './routes/authRoutes.js';
 import tourRouter from './routes/tourRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import reviewRouter from './routes/reviewRoutes.js';
@@ -79,6 +80,7 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 app.use('/', viewRouter);
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

@@ -25,7 +25,7 @@ const createSendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    user,
+    data: user,
   });
 };
 
@@ -82,7 +82,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
   //3) send the token to user's email
   try {
-    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
+    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/resetPassword/${resetToken}`;
     await new Email(user, resetURL).sendPasswordReset();
     res.status(200).json({
       status: 'success',
