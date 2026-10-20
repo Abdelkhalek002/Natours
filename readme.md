@@ -26,15 +26,16 @@ This project includes:
 
 ```text
 Natours/
-  controllers/        # Route handlers and business logic
-  models/             # Mongoose models
-  routes/             # API and view routes
-  views/              # Pug templates
+  src/
+    controllers/      # Route handlers and business logic
+    models/           # Mongoose models
+    routes/           # API and view routes
+    views/            # Pug templates
+    utils/            # Helpers (errors, email, API features)
+    app.js            # Express app config and middleware
+    server.js         # App bootstrap and DB connection
   public/             # Static assets (CSS/JS/images)
-  utils/              # Helpers (errors, email, API features)
   dev-data/           # Seed/import data and template helpers
-  app.js              # Express app config and middleware
-  server.js           # App bootstrap and DB connection
   .env.example        # Environment variables template
   .env                # Local environment variables (git-ignored)
 ```
@@ -126,11 +127,35 @@ SENDGRID_PASSWORD=your_sendgrid_api_key
 - `npm run start:prod` - Start in production mode via `cross-env`
 - `npm run watch:js` - Watch and bundle frontend JS with Parcel
 - `npm run build:js` - Build frontend JS bundle for production
+- `npm run data:import` - Seed database with tours, users, and reviews
+- `npm run data:delete` - Delete all tours, users, and reviews from database
+
+## Database Seeding
+
+To populate your database (Cloud Atlas or Local) with initial tours, users (including guides and admin), and reviews:
+
+```bash
+npm run data:import
+# Or directly: node dev-data/data/import-dev-data.js --import
+```
+
+To clean all data from the database:
+
+```bash
+npm run data:delete
+# Or directly: node dev-data/data/import-dev-data.js --delete
+```
 
 ## Run the Project
 
-1. Start MongoDB
-2. Start the backend:
+1. Ensure MongoDB is running (or MongoDB Atlas connection string is configured in `.env`)
+2. (First-time setup) Seed sample data:
+
+```bash
+npm run data:import
+```
+
+3. Start the backend:
 
 ```bash
 npm run start

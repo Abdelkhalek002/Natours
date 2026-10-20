@@ -3,7 +3,6 @@ import User from '../models/userModel.js';
 import Booking from '../models/bookingModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/appError.js';
-import { showAlert } from '../public/js/alerts.js';
 
 export const getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();

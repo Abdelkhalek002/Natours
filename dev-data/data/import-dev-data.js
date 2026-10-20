@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 import mongoose from 'mongoose';
 import fs from 'fs';
-import Tour from '../../models/tourModel.js';
-import User from '../../models/userModel.js';
-import Review from '../../models/reviewModel.js';
+import Tour from '../../src/models/tourModel.js';
+import User from '../../src/models/userModel.js';
+import Review from '../../src/models/reviewModel.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -15,7 +15,7 @@ const DB = process.env.DATABASE
   ? process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
   : process.env.DATABASE_LOCAL;
 
-(async function connectDB() {
+const connectDB = async () => {
   try {
     if (!DB) {
       console.error(
@@ -27,10 +27,11 @@ const DB = process.env.DATABASE
     console.log('Database connection successful!');
   } catch (error) {
     console.error('Connection to database failed:', error);
+    process.exit(1);
   }
-})();
+};
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
+// const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 const egyTours = JSON.parse(
   fs.readFileSync(`${__dirname}/EGY-tours.json`, 'utf-8'),
 );
@@ -41,30 +42,50 @@ const reviews = JSON.parse(
 
 const importData = async () => {
   try {
+    await Tour.deleteMany();
+    await User.deleteMany();
+    await Review.deleteMany();
+
     await Tour.create(egyTours);
-    //await User.create(users, { validateBeforeSave: false });
-    //await Review.create(reviews);
-    console.log('data successfully loaded!');
-    process.exit();
+
+    const preparedUsers = users.map((u) => ({
+      ...u,
+      _id: new mongoose.Types.ObjectId(u._id),
+    }));
+    await User.collection.insertMany(preparedUsers);
+
+    await Review.create(reviews);
+    console.log('Data successfully loaded!');
+    process.exit(0);
   } catch (error) {
-    console.log(error);
+    console.error('Error importing data:', error);
+    process.exit(1);
   }
 };
 
 const deleteData = async () => {
   try {
     await Tour.deleteMany();
-    //await User.deleteMany();
-    //await Review.deleteMany();
-    console.log('data successfully deleted!');
-    process.exit();
+    await User.deleteMany();
+    await Review.deleteMany();
+    console.log('Data successfully deleted!');
+    process.exit(0);
   } catch (error) {
-    console.log(error);
+    console.error('Error deleting data:', error);
+    process.exit(1);
   }
 };
 
-if (process.argv[2] === '--import') {
-  importData();
-} else if (process.argv[2] === '--delete') {
-  deleteData();
-}
+const run = async () => {
+  await connectDB();
+  if (process.argv[2] === '--import') {
+    await importData();
+  } else if (process.argv[2] === '--delete') {
+    await deleteData();
+  } else {
+    console.log('Please specify --import or --delete');
+    process.exit(0);
+  }
+};
+
+run();
