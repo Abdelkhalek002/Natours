@@ -17,6 +17,9 @@
   "scripts": {
     "start": "nodemon src/server.js",
     "start:prod": "cross-env NODE_ENV=production nodemon src/server.js",
+    "dev": "concurrently --names \"SERVER,PARCEL\" -c \"blue,green\" \"npm:watch:server\" \"npm:watch:js\"",
+    "watch": "npm run dev",
+    "watch:server": "nodemon src/server.js",
     "watch:js": "parcel watch ./public/js/index.js --target app",
     "build:js": "parcel build ./public/js/index.js --target app",
     "data:import": "node dev-data/data/import-dev-data.js --import",
@@ -47,6 +50,7 @@
   },
   "devDependencies": {
     "buffer": "^6.0.3",
+    "concurrently": "^10.0.6",
     "eslint": "^9.39.2",
     "parcel": "^2.16.4",
     "prettier": "^3.7.4"

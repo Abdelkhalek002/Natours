@@ -729,7 +729,7 @@ const bookTour = async (tourId)=>{
         // }
         const stripe = window.Stripe('pk_test_51T1XHwD65aiMRex3vcHRsNWnMpadFBziiTzN7EIutTNOoEql9YexF6FLVJOwBP9xWvd9eCbh4RgyDKLhc0kzPliB00B4kY1DgB');
         // 1) get checkout session from API endpoint
-        const session = await (0, _axiosDefault.default)(`http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`);
+        const session = await (0, _axiosDefault.default)(`/api/v1/bookings/checkout-session/${tourId}`);
         console.log(session);
         // 2) get checkout form + charge credit card
         await stripe.redirectToCheckout({
@@ -740,6 +740,6 @@ const bookTour = async (tourId)=>{
     }
 };
 
-},{"axios":"6zvCG","../js/alerts.js":"7jKzU","@parcel/transformer-js/src/esmodule-helpers.js":"cnMXi"}]},["9z1e2"], null, "parcelRequire8e08", {})
+},{"axios":"6zvCG","../js/alerts.js":"7jKzU","@parcel/transformer-js/src/esmodule-helpers.js":"cnMXi"}]},["9z1e2"], null, "parcelRequire11c7", {})
 
 //# sourceMappingURL=stripe.aaa73846.js.map

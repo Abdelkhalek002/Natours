@@ -125,6 +125,7 @@ SENDGRID_PASSWORD=your_sendgrid_api_key
 
 ## Available Scripts
 
+- `npm run dev` - Run both backend (nodemon) and frontend (Parcel watch) in sync
 - `npm run start` - Start server with nodemon
 - `npm run start:prod` - Start in production mode via `cross-env`
 - `npm run watch:js` - Watch and bundle frontend JS with Parcel
