@@ -1,7 +1,9 @@
 import express from 'express';
-const router = express.Router();
 import * as userController from '../controllers/userController.js';
 import * as authController from '../controllers/authController.js';
+import { protect, restrictTo } from '../middlewares/authMiddleware.js';
+
+const router = express.Router();
 
 // Allowed for the public
 router.post('/signup', authController.signup);
@@ -11,7 +13,7 @@ router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 // Protected Routes
-router.use(authController.protect);
+router.use(protect);
 router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/Me', userController.getMe, userController.getUser);
 router.patch(
@@ -23,7 +25,7 @@ router.patch(
 router.delete('/deleteMe', userController.deleteMe);
 
 // Restricted To Admins Only
-router.use(authController.restrictTo('admin'));
+router.use(restrictTo('admin'));
 router.route('/').get(userController.getAllUsers);
 router
   .route('/:id')

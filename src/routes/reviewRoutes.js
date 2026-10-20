@@ -1,18 +1,18 @@
 import express from 'express';
 import * as reviewController from '../controllers/reviewController.js';
-import * as authController from '../controllers/authController.js';
+import { protect, restrictTo } from '../middlewares/authMiddleware.js';
 
-//{mergeParams} is for letting router to access tourId in tourRoutes.js
+// {mergeParams} allows the router to access tourId from tourRoutes
 const router = express.Router({ mergeParams: true });
 
 // Protected Routes
-router.use(authController.protect);
+router.use(protect);
 
 router
   .route('/')
   .get(reviewController.getAllReviews)
   .post(
-    authController.restrictTo('user'),
+    restrictTo('user'),
     reviewController.setTourUserIds,
     reviewController.createReview,
   );
@@ -21,11 +21,11 @@ router
   .route('/:id')
   .get(reviewController.getReview)
   .patch(
-    authController.restrictTo('user', 'admin'),
+    restrictTo('user', 'admin'),
     reviewController.updateReview,
   )
   .delete(
-    authController.restrictTo('user', 'admin'),
+    restrictTo('user', 'admin'),
     reviewController.deleteReview,
   );
 

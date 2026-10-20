@@ -28,6 +28,7 @@ This project includes:
 Natours/
   src/
     controllers/      # Route handlers and business logic
+    middlewares/      # Express middlewares (auth, errors)
     models/           # Mongoose models
     routes/           # API and view routes
     views/            # Pug templates

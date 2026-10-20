@@ -1,14 +1,14 @@
 import express from 'express';
 import * as bookingController from '../controllers/bookingController.js';
-import * as authController from '../controllers/authController.js';
+import { protect, restrictTo } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.use(authController.protect);
+router.use(protect);
 
 router.get('/checkout-session/:tourID', bookingController.getCheckoutSession);
 
-router.use(authController.restrictTo('admin', 'lead-guide'));
+router.use(restrictTo('admin', 'lead-guide'));
 router
   .route('/')
   .get(bookingController.getAllBookings)

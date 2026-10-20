@@ -1,4 +1,3 @@
-import { promisify } from 'util';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
@@ -63,81 +62,11 @@ export const logOut = (req, res) => {
   res.status(200).json({ status: 'success' });
 };
 
-export const protect = catchAsync(async (req, res, next) => {
-  let token;
-  //1) getting token and check if it's there
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
-  }
-  if (!token) {
-    return next(
-      new AppError('You are not logged in! Log in to get access.', 401),
-    );
-  }
-  //2) token verfication
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET); //using promisify from util module for making the whole project code based on async/await and not cb functions
-  //3) check if user still exists
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError('the user belongs to this token is no longer exist', 401),
-    );
-  }
-  //4) check if password changed after token was issued
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError('User recently changed password, please log in again.', 401),
-    );
-  }
-
-  //GRANT ACCESS TO PROTECTED ROUTE
-  req.user = currentUser;
-  res.locals.user = currentUser;
-  next();
-});
-
-// Only for rendered pages, no errors
-export const isLoggedIn = catchAsync(async (req, res, next) => {
-  if (req.cookies.jwt) {
-    //1) token verfication
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET,
-    );
-    //2) check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-      return next();
-    }
-    //3) check if password changed after token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-      return next();
-    }
-    // ✅ LOGGED USER
-    res.locals.user = currentUser;
-    return next();
-  }
-  next();
-});
-
-export const restrictTo = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError(
-          'Access Denied, You are not authorized to perform this action.',
-          403,
-        ),
-      );
-    }
-    next();
-  };
-};
+export {
+  protect,
+  isLoggedIn,
+  restrictTo,
+} from '../middlewares/authMiddleware.js';
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
   //1) get user based on POSTed email

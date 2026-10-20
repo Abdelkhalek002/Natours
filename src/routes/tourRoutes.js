@@ -1,6 +1,6 @@
 import express from 'express';
 import * as tourController from '../controllers/tourController.js';
-import * as authController from '../controllers/authController.js';
+import { protect, restrictTo } from '../middlewares/authMiddleware.js';
 import reviewRouter from '../routes/reviewRoutes.js';
 
 const router = express.Router();
@@ -11,8 +11,8 @@ router.route('/tour-stats').get(tourController.getTourStats);
 router
   .route('/monthly-plan/:year')
   .get(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide', 'guide'),
+    protect,
+    restrictTo('admin', 'lead-guide', 'guide'),
     tourController.getMonthlyPlan,
   );
 
@@ -26,8 +26,8 @@ router
   .route('/')
   .get(tourController.getAllTours)
   .post(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
+    protect,
+    restrictTo('admin', 'lead-guide'),
     tourController.createTour,
   );
 
@@ -35,15 +35,15 @@ router
   .route('/:id')
   .get(tourController.getTour)
   .patch(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
+    protect,
+    restrictTo('admin', 'lead-guide'),
     tourController.uploadTourImages,
     tourController.resizeTourImages,
     tourController.updateTour,
   )
   .delete(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
+    protect,
+    restrictTo('admin', 'lead-guide'),
     tourController.deleteTour,
   );
 
