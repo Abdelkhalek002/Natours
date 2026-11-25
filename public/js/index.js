@@ -1,6 +1,16 @@
 import { login, logOut } from './login.js';
 import { signup } from './signup.js';
-import { updateSettings } from './updateSettings.js';
+import { updateSettings, initPasswordToggles } from './updateSettings.js';
+import { initModals } from './modal.js';
+import { initCatalog } from './catalog.js';
+import { initTourDetail } from './tourDetail.js';
+import { initMyBookings } from './myBookings.js';
+import { initMyReviews } from './myReviews.js';
+import { initBilling } from './billing.js';
+import { initAdminTours } from './adminTours.js';
+import { initAdminUsers } from './adminUsers.js';
+import { initAdminReviews } from './adminReviews.js';
+import { initAdminBookings } from './adminBookings.js';
 
 // DOM elements
 const loginForm = document.querySelector('.form--login');
@@ -10,16 +20,17 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 
-if (loginForm)
-  document.querySelector('.form--login').addEventListener('submit', (e) => {
+if (loginForm) {
+  loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password);
   });
+}
 
-if (signupForm)
-  document.querySelector('.form--signup').addEventListener('submit', (e) => {
+if (signupForm) {
+  signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
@@ -27,6 +38,7 @@ if (signupForm)
     const passwordConfirm = document.getElementById('passwordConfirm').value;
     signup(name, email, password, passwordConfirm);
   });
+}
 
 if (logoutBtn) {
   logoutBtn.addEventListener('click', logOut);
@@ -38,7 +50,10 @@ if (userDataForm) {
     const form = new FormData();
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
-    form.append('photo', document.getElementById('photo').files[0]);
+    const photoInput = document.getElementById('photo');
+    if (photoInput && photoInput.files[0]) {
+      form.append('photo', photoInput.files[0]);
+    }
     updateSettings(form, 'data');
   });
 }
@@ -46,7 +61,8 @@ if (userDataForm) {
 if (userPasswordForm) {
   userPasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    document.querySelector('.btn--save-password').textContent = 'updating ...';
+    const saveBtn = document.querySelector('.btn--save-password');
+    if (saveBtn) saveBtn.textContent = 'Updating...';
     const passwordCurrent = document.getElementById('password-current').value;
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('password-confirm').value;
@@ -54,7 +70,7 @@ if (userPasswordForm) {
       { passwordCurrent, password, passwordConfirm },
       'password',
     );
-    document.querySelector('.btn--save-password').textContent = 'save password';
+    if (saveBtn) saveBtn.textContent = 'Save password';
     document.getElementById('password-current').value = '';
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
@@ -63,9 +79,22 @@ if (userPasswordForm) {
 
 if (bookBtn) {
   bookBtn.addEventListener('click', async (e) => {
-    e.target.textContent = 'processing...';
-    const { tourId } = e.target.dataset;
+    const btn = e.currentTarget;
+    btn.textContent = 'Processing...';
+    const { tourId, stripeKey } = btn.dataset;
     const { bookTour } = await import('./stripe.js');
-    bookTour(tourId);
+    bookTour(tourId, stripeKey);
   });
 }
+
+initModals();
+initCatalog();
+initTourDetail();
+initMyBookings();
+initMyReviews();
+initBilling();
+initPasswordToggles();
+initAdminTours();
+initAdminUsers();
+initAdminReviews();
+initAdminBookings();

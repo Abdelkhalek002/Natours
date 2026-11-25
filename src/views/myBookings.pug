@@ -1,0 +1,81 @@
+extends base
+include _accountShell
+
+mixin bookingCard(booking)
+  - const tour = booking.tour || {};
+  - const bookingRef = String(booking._id || booking.id || '').slice(-6).toUpperCase();
+  - const nextDate = tour.startDates && tour.startDates[0] ? new Date(tour.startDates[0]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Flexible dates';
+  - const isPaid = booking.paid !== false;
+  article.booking-card
+    .booking-card__media
+      if tour.imageCover
+        img.booking-card__img(
+          src=`/img/tours/${tour.imageCover}`,
+          alt=tour.name || 'Expedition'
+        )
+    .booking-card__body
+      .booking-card__top
+        span.type-label-numeric.text-muted= `#BK-${bookingRef}`
+        span.badge(class=isPaid ? 'badge--mint' : 'badge--warning')
+          span.badge__dot
+          span= isPaid ? 'Paid' : 'Pending'
+
+      div
+        h2.type-headline-sm.text-heading= tour.name || 'Expedition'
+        p.type-body-sm.text-muted
+          if tour.startLocation && tour.startLocation.description
+            | #{tour.startLocation.description} · 
+          | #{nextDate}
+          if tour.duration
+            |  · #{tour.duration} days
+
+      .booking-card__footer
+        span.type-label-numeric.text-heading= `$${Number(booking.price || tour.price || 0).toLocaleString('en-US')}`
+        .table-actions
+          if tour.slug
+            a.btn.btn--secondary.btn--sm(href=`/tour/${tour.slug}`) View Tour
+          a.btn.btn--ghost.btn--sm(href='/my-reviews') Write Review
+
+block content
+  - const upcoming = Array.isArray(upcomingBookings) ? upcomingBookings : [];
+  - const past = Array.isArray(pastBookings) ? pastBookings : [];
+  +accountShell('bookings', user, 'My Bookings')
+    .settings-card__header
+      h1.type-headline-md.text-heading My bookings
+      p.type-body-sm.text-muted Manage your upcoming departures and past alpine expeditions.
+
+    .tabs(role='tablist', aria-label='Booking categories')
+      button.chip.chip--active(
+        type='button',
+        role='tab',
+        aria-selected='true',
+        data-tab='upcoming'
+      )= `Upcoming (${upcoming.length})`
+      button.chip(
+        type='button',
+        role='tab',
+        aria-selected='false',
+        data-tab='past'
+      )= `Past Expeditions (${past.length})`
+
+    #tab-upcoming.grid
+      if upcoming.length > 0
+        each booking in upcoming
+          +bookingCard(booking)
+      else
+        .empty-state
+          span.material-symbols-outlined.text-muted luggage
+          h2.type-headline-sm.text-heading No upcoming expeditions
+          p.type-body-sm.text-muted Ready for your next alpine adventure? Explore our curated 2026 departures.
+          a.btn.btn--primary.btn--sm(href='/') Explore Tours
+
+    #tab-past.grid(hidden)
+      if past.length > 0
+        each booking in past
+          +bookingCard(booking)
+      else
+        .empty-state
+          span.material-symbols-outlined.text-muted history
+          h2.type-headline-sm.text-heading No past expeditions yet
+          p.type-body-sm.text-muted Completed expeditions will appear here after your departure date.
+          a.btn.btn--secondary.btn--sm(href='/') Browse Expeditions

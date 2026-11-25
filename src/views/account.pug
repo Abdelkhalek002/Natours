@@ -1,63 +1,110 @@
-extend base
-
-mixin navItem(link, text, icon, active)
-    li(class= `${active ? 'side-nav--active': ''}`)
-        a(href=`${link}`)
-            svg
-                use(xlink:href=`img/icons.svg#icon-${icon}`)
-            | #{text}
+extends base
+include _accountShell
 
 block content
-    main.main
-        .user-view
-            nav.user-view__menu
-                ul.side-nav
-                    +navItem('#', 'Settings', 'settings', true)
-                    +navItem('/my-bookings', 'My bookings', 'briefcase')
-                    +navItem('#', 'My reviews', 'star')
-                    +navItem('#', 'Billing', 'credit-card')
+  +accountShell('settings', user, 'Settings')
+    .settings-card
+      .settings-card__header
+        h1.type-headline-md.text-heading Account settings
+        p.type-body-sm.text-muted Update your traveler profile and display photo.
 
-                    - if(user.role === 'admin')
-                        .admin-nav
-                            h5.admin-nav__heading Admin
-                            ul.side-nav
-                                +navItem('#', 'Manage tours', 'map')
-                                +navItem('#', 'Manage users', 'users')
-                                +navItem('#', 'Manage reviews', 'star')
-                                +navItem('#', 'Manage bookings', 'briefcase')
-            .user-view__content
-                .user-view__form-container
-                    h2.heading-secondary.ma-bt-md Account settings
+      form#form-account-settings.form.form-user-data
+        .form-group
+          label.form-label(for='name') Name
+          input#name.input(
+            type='text',
+            value=user.name,
+            required,
+            name='name',
+            autocomplete='name'
+          )
 
-                    //- WITHOUT API
-                    //- form.form.form-user-data(action='/submit-user-data' method= 'POST' enctype= 'multipart/form-data')
+        .form-group
+          label.form-label(for='email') Email address
+          input#email.input(
+            type='email',
+            value=user.email,
+            required,
+            name='email',
+            autocomplete='email'
+          )
 
-                    //- WITH API
-                    form.form.form-user-data
-                        .form__group
-                            label.form__label(for='name') Name
-                            input#name.form__input(type='text', value=`${user.name}`, required, name='name')
-                        .form__group.ma-bt-md
-                            label.form__label(for='email') Email address
-                            input#email.form__input(type='email', value=`${user.email}`, required, name='email')
-                        .form__group.form__photo-upload
-                            img.form__user-photo(src=`/img/users/${user.photo}`, alt=`${user.name} photo`)
-                            input.form__upload(type='file', accept= 'image/*', id= 'photo', name= 'photo')
-                            label(for= 'photo') Choose new photo
-                        .form__group.right
-                            button.btn.btn--small.btn--green Save settings
-                .line &nbsp;
-                .user-view__form-container
-                    h2.heading-secondary.ma-bt-md Password change
-                    form.form.form-user-password
-                        .form__group
-                            label.form__label(for='password-current') Current password
-                            input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
-                        .form__group
-                            label.form__label(for='password') New password
-                            input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
-                        .form__group.ma-bt-lg
-                            label.form__label(for='password-confirm') Confirm password
-                            input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
-                        .form__group.right
-                            button.btn.btn--small.btn--green.btn--save-password Save password
+        .form-group
+          span.form-label Profile photo
+          .file-upload
+            img.file-upload__avatar(
+              src=`/img/users/${user.photo}`,
+              alt=`Photo of ${user.name}`
+            )
+            input#photo.file-upload__input(
+              type='file',
+              accept='image/*',
+              name='photo'
+            )
+            label.btn.btn--secondary.btn--sm.file-upload__label(for='photo') Choose new photo
+            span#photo-filename.type-caption.file-upload__name No new file selected
+
+        .booking-card__footer
+          span.type-caption.text-muted Changes take effect immediately across your expeditions.
+          button.btn.btn--primary(type='submit') Save settings
+
+    .settings-card
+      .settings-card__header
+        h2.type-headline-md.text-heading Password change
+        p.type-body-sm.text-muted Keep your account secure with a strong password (minimum 8 characters).
+
+      form#form-password-change.form.form-user-password
+        .form-group
+          label.form-label(for='password-current') Current password
+          .input-wrap
+            input#password-current.input(
+              type='password',
+              placeholder='••••••••',
+              required,
+              minlength='8',
+              autocomplete='current-password'
+            )
+            button.input-toggle(
+              type='button',
+              data-toggle-password='password-current',
+              aria-label='Show current password'
+            )
+              span.material-symbols-outlined visibility
+
+        .form-group
+          label.form-label(for='password') New password
+          .input-wrap
+            input#password.input(
+              type='password',
+              placeholder='••••••••',
+              required,
+              minlength='8',
+              autocomplete='new-password'
+            )
+            button.input-toggle(
+              type='button',
+              data-toggle-password='password',
+              aria-label='Show new password'
+            )
+              span.material-symbols-outlined visibility
+
+        .form-group
+          label.form-label(for='password-confirm') Confirm password
+          .input-wrap
+            input#password-confirm.input(
+              type='password',
+              placeholder='••••••••',
+              required,
+              minlength='8',
+              autocomplete='new-password'
+            )
+            button.input-toggle(
+              type='button',
+              data-toggle-password='password-confirm',
+              aria-label='Show confirm password'
+            )
+              span.material-symbols-outlined visibility
+
+        .booking-card__footer
+          span.type-caption.text-muted You will stay signed in on this device.
+          button.btn.btn--primary.btn--save-password(type='submit') Save password

@@ -1,7 +1,13 @@
 extends base
+
 block content
-  main.main
-    .error
-      .error__title
-        h2.heading-secondary.heading-secondary--error Something went wrong!   
-      .error__msg= msg
+  main.main.error-page
+    .container
+      .error-card.card
+        .error-card__icon-wrap
+          span.material-symbols-outlined.error-card__icon error_outline
+        span.badge.badge--error.type-label-caps Error
+        h1.error-card__title.type-headline-lg Something went wrong!
+        p.error-card__msg.type-body-md= msg
+        .error-card__actions
+          a.btn.btn--primary(href='/') Back to All Tours

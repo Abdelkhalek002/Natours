@@ -1,44 +1,154 @@
 extends base
+
 block content
-    main.main
-        .card-container
+  - const activeDifficulty = (filters && filters.difficulty) || '';
+  - const activeSort = (filters && filters.sort) || '';
+  - const pag = pagination || { totalTours: tours.length, totalPages: 1, currentPage: 1, showingStart: tours.length ? 1 : 0, showingEnd: tours.length };
+  -
+    const buildPageUrl = (pageNum) => {
+      const params = [];
+      if (activeDifficulty) params.push(`difficulty=${encodeURIComponent(activeDifficulty)}`);
+      if (activeSort) params.push(`sort=${encodeURIComponent(activeSort)}`);
+      params.push(`page=${pageNum}`);
+      return `/?${params.join('&')}`;
+    };
+
+  main.main
+    section.section
+      .container
+        .catalog-header
+          div
+            span.badge.badge--mint
+              span.badge__dot
+              | Season 2026
+            h1.type-headline-xl Curated Expeditions
+          p.type-body-md.text-muted= `${pag.totalTours} expedition${pag.totalTours === 1 ? '' : 's'} available`
+
+        .catalog-toolbar
+          .filter-chips(role='group', aria-label='Filter tours by difficulty')
+            button.chip(
+              type='button',
+              data-difficulty='',
+              class=activeDifficulty === '' ? 'chip--active' : ''
+            ) All Levels
+            button.chip(
+              type='button',
+              data-difficulty='easy',
+              class=activeDifficulty === 'easy' ? 'chip--active' : ''
+            ) Easy
+            button.chip(
+              type='button',
+              data-difficulty='medium',
+              class=activeDifficulty === 'medium' ? 'chip--active' : ''
+            ) Medium
+            button.chip(
+              type='button',
+              data-difficulty='difficult',
+              class=activeDifficulty === 'difficult' ? 'chip--active' : ''
+            ) Difficult
+
+          .sort-control
+            label.type-body-sm.text-muted(for='catalog-sort') Sort by
+            select#catalog-sort.select(name='sort')
+              option(value='', selected=activeSort === '') Featured
+              option(value='price', selected=activeSort === 'price') Price: Low to High
+              option(value='-price', selected=activeSort === '-price') Price: High to Low
+              option(value='-ratingsAverage', selected=activeSort === '-ratingsAverage') Top Rated
+
+        if tours && tours.length
+          .grid.grid--3
             each tour in tours
-                .card
-                    //- CARD HEADER
-                    .card__header
-                        .card__picture
-                            .card__picture-overlay &nbsp;
-                            img.card__picture-img(src=`img/tours/${tour.imageCover}`, alt=`${tour.name}`)
-                        h3.heading-tertirary
-                            span= tour.name
-                    //- CARD DETAILES
-                    .card__details
-                        h4.card__sub-heading= `${tour.difficulty} ${tour.duration}-day tour`
-                        p.card__text= `${tour.summary}`
-                        .card__data
-                            svg.card__icon
-                                use(xlink:href='img/icons.svg#icon-map-pin')
-                            span=`${tour.startLocation.description}`
-                        .card__data
-                            svg.card__icon
-                                use(xlink:href='img/icons.svg#icon-calendar')
-                            span=  tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
-                        .card__data
-                            svg.card__icon
-                                use(xlink:href='img/icons.svg#icon-flag')
-                            span= `${tour.locations.length} stops` 
-                        .card__data
-                            svg.card__icon
-                                use(xlink:href='img/icons.svg#icon-user')
-                            span= `${tour.maxGroupSize} people`
-                    //- CARD FOOTER
-                    .card__footer
-                        p
-                            span.card__footer-value=`$${tour.price}`
-                            | 
-                            span.card__footer-text per person
-                        p.card__ratings
-                            span.card__footer-value= tour.ratingsAverage
-                            | 
-                            span.card__footer-text= `ratings (${tour.ratingsQuantity})`
-                        a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details
+              article.card.tour-card
+                .tour-card__media
+                  img.tour-card__img(
+                    src=`/img/tours/${tour.imageCover}`,
+                    alt=tour.name,
+                    loading='lazy'
+                  )
+                  .tour-card__badges
+                    span.badge.badge--dark= tour.difficulty
+                    span.tour-card__price-pill.type-label-numeric= `$${tour.price}`
+
+                .card__body
+                  p.tour-card__overline.type-label-caps= `${tour.difficulty} · ${tour.duration}-day tour`
+                  h2.tour-card__title.type-headline-sm= tour.name
+                  p.tour-card__summary.type-body-sm= tour.summary
+
+                  .tour-card__meta-grid
+                    .tour-card__meta-item
+                      span.material-symbols-outlined(aria-hidden='true') location_on
+                      span= (tour.startLocation && tour.startLocation.description) || 'TBA'
+                    .tour-card__meta-item
+                      span.material-symbols-outlined(aria-hidden='true') calendar_today
+                      span= tour.startDates && tour.startDates[0] ? new Date(tour.startDates[0]).toLocaleString('en-US', { month: 'long', year: 'numeric' }) : 'TBA'
+                    .tour-card__meta-item
+                      span.material-symbols-outlined(aria-hidden='true') flag
+                      span= `${tour.locations ? tour.locations.length : 0} stops`
+                    .tour-card__meta-item
+                      span.material-symbols-outlined(aria-hidden='true') group
+                      span= `${tour.maxGroupSize} people`
+
+                  .tour-card__footer
+                    .tour-card__rating
+                      span.material-symbols-outlined.icon--filled.text-primary(aria-hidden='true') star
+                      span.type-label-numeric.text-heading= tour.ratingsAverage
+                      span.type-body-sm.text-muted= `(${tour.ratingsQuantity})`
+                    a.btn.btn--primary.btn--sm(href=`/tour/${tour.slug}`) Details
+        else
+          .empty-state
+            span.material-symbols-outlined.text-muted(aria-hidden='true') explore_off
+            h2.type-headline-sm No expeditions match your filters
+            p.type-body-sm.text-muted Try clearing your difficulty filter to explore all available tours.
+            a.btn.btn--secondary.btn--sm(href='/') Reset filters
+
+        if pag.totalTours > 0
+          .pagination
+            p.type-body-sm.text-muted= `Showing ${pag.showingStart}-${pag.showingEnd} of ${pag.totalTours} expeditions`
+            if pag.totalPages > 1
+              nav.pagination__controls(aria-label='Catalog pagination')
+                if pag.currentPage > 1
+                  a.pagination__btn(
+                    href=buildPageUrl(pag.currentPage - 1),
+                    data-page=pag.currentPage - 1,
+                    aria-label='Previous page'
+                  )
+                    span.material-symbols-outlined(aria-hidden='true') chevron_left
+                else
+                  span.pagination__btn(aria-disabled='true')
+                    span.material-symbols-outlined(aria-hidden='true') chevron_left
+
+                - for (let p = 1; p <= pag.totalPages; p += 1)
+                  a.pagination__btn(
+                    href=buildPageUrl(p),
+                    data-page=p,
+                    class=p === pag.currentPage ? 'pagination__btn--active' : '',
+                    aria-current=p === pag.currentPage ? 'page' : false
+                  )= p
+
+                if pag.currentPage < pag.totalPages
+                  a.pagination__btn(
+                    href=buildPageUrl(pag.currentPage + 1),
+                    data-page=pag.currentPage + 1,
+                    aria-label='Next page'
+                  )
+                    span.material-symbols-outlined(aria-hidden='true') chevron_right
+                else
+                  span.pagination__btn(aria-disabled='true')
+                    span.material-symbols-outlined(aria-hidden='true') chevron_right
+
+        .promise-bar
+          .promise-item
+            span.material-symbols-outlined.text-primary(aria-hidden='true') verified_user
+            div
+              h3.type-headline-sm Verified Mountain Guides
+              p.type-body-sm.text-muted Certified local experts leading every expedition.
+          .promise-item
+            span.material-symbols-outlined.text-primary(aria-hidden='true') eco
+            div
+              h3.type-headline-sm Leave No Trace
+              p.type-body-sm.text-muted Carbon-balanced routes supporting alpine conservation.
+          .promise-item
+            span.material-symbols-outlined.text-primary(aria-hidden='true') event_available
+            div
+              h3.type-headline-sm Flexible Booking
+              p.type-body-sm.text-muted Transparent pricing with instant Stripe confirmation.

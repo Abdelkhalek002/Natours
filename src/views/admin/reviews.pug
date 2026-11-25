@@ -1,0 +1,146 @@
+extends ../base
+include ../_accountShell
+
+block content
+  +accountShell('admin-reviews', user, 'Manage Reviews')
+    .stats-row
+      .stat-card
+        span.type-label-caps Total Reviews
+        span.type-headline-md= (stats && stats.totalReviews) || 0
+      .stat-card
+        span.type-label-caps Average Rating
+        span.type-headline-md= stats && stats.avgRating != null ? Number(stats.avgRating).toFixed(1) : '0.0'
+
+    .admin-toolbar
+      form.admin-toolbar__filters(method='GET', action='/admin/reviews')
+        select.select(name='tour')
+          option(value='') All tours
+          if tours && tours.length
+            each t in tours
+              option(
+                value=t._id,
+                selected=filters && String(filters.tour) === String(t._id)
+              )= t.name
+        select.select(name='rating')
+          option(value='') All ratings
+          each r in [5, 4, 3, 2, 1]
+            option(
+              value=r,
+              selected=filters && String(filters.rating) === String(r)
+            )= `${r} Stars`
+        button.btn.btn--secondary.btn--sm(type='submit')
+          span.material-symbols-outlined filter_list
+          span Filter
+        if filters && (filters.tour || filters.rating)
+          a.btn.btn--ghost.btn--sm(href='/admin/reviews') Clear
+
+    if reviews && reviews.length
+      .table-wrap
+        table.data-table
+          thead
+            tr
+              th Tour
+              th Author
+              th Rating
+              th Review
+              th Actions
+          tbody
+            each rev in reviews
+              - const reviewPayload = JSON.stringify({ _id: rev._id, rating: rev.rating, review: rev.review });
+              tr
+                td.type-title-sm= (rev.tour && rev.tour.name) || 'Tour'
+                td
+                  .table-entity
+                    img.user-mini-card__avatar(
+                      src=`/img/users/${(rev.user && rev.user.photo) || 'default.jpg'}`,
+                      alt=(rev.user && rev.user.name) || 'User'
+                    )
+                    span= (rev.user && rev.user.name) || 'User'
+                td
+                  span.badge.badge--mint.type-mono= `${rev.rating} / 5`
+                td= rev.review
+                td
+                  .table-actions
+                    button.btn.btn--ghost.btn--sm.js-edit-review(
+                      type='button',
+                      data-review=reviewPayload,
+                      aria-label='Edit review'
+                    )
+                      span.material-symbols-outlined edit
+                      span Edit
+                    button.btn.btn--danger.btn--sm.js-delete-review(
+                      type='button',
+                      data-id=rev._id,
+                      data-name=(rev.tour && rev.tour.name) || 'this review',
+                      aria-label='Delete review'
+                    )
+                      span.material-symbols-outlined delete
+    else
+      .empty-state
+        span.material-symbols-outlined reviews
+        h3.type-headline-sm No reviews found
+        p.type-body-sm Try adjusting your tour or rating filter.
+
+    if pagination && pagination.totalPages > 1
+      .pagination
+        p.type-caption= `Page ${pagination.currentPage} of ${pagination.totalPages} (${pagination.totalItems} reviews)`
+        .pagination__controls
+          - const baseParams = `tour=${encodeURIComponent((filters && filters.tour) || '')}&rating=${encodeURIComponent((filters && filters.rating) || '')}`;
+          if pagination.currentPage > 1
+            a.pagination__btn(href=`/admin/reviews?page=${pagination.currentPage - 1}&${baseParams}`) Prev
+          - for (let p = 1; p <= pagination.totalPages; p += 1)
+            a.pagination__btn(
+              href=`/admin/reviews?page=${p}&${baseParams}`,
+              class=p === pagination.currentPage ? 'pagination__btn--active' : ''
+            )= p
+          if pagination.currentPage < pagination.totalPages
+            a.pagination__btn(href=`/admin/reviews?page=${pagination.currentPage + 1}&${baseParams}`) Next
+
+    #modal-admin-review.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='review-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#review-modal-title.type-headline-sm Edit Review
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        form#admin-review-form
+          input#admin-review-id(type='hidden', name='id')
+          .form-group
+            label.form-label(for='admin-review-rating') Rating
+            select#admin-review-rating.select(name='rating', required)
+              option(value='5') 5 - Excellent
+              option(value='4') 4 - Very Good
+              option(value='3') 3 - Average
+              option(value='2') 2 - Poor
+              option(value='1') 1 - Terrible
+          .form-group
+            label.form-label(for='admin-review-text') Review
+            textarea#admin-review-text.textarea(name='review', rows='4', required)
+          .modal__footer
+            button.btn.btn--ghost(type='button', data-modal-close) Cancel
+            button.btn.btn--primary(type='submit') Save Review
+
+    #modal-confirm-delete.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='delete-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#delete-modal-title.type-headline-sm Confirm Deletion
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        p.type-body-sm
+          | Are you sure you want to delete the review for 
+          strong#confirm-delete-name this tour
+          | ? This action cannot be undone.
+        .modal__footer
+          button.btn.btn--ghost(type='button', data-modal-close) Cancel
+          button#confirm-delete-btn.btn.btn--danger(type='button') Delete

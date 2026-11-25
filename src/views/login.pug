@@ -1,15 +1,38 @@
 extends base
 
-block content 
-    main.main
-        .login-form
-            h2.heading-secondary.ma-bt-lg Log into your account
-            form.form.form--login
-                .form__group
-                    label.form__label(for='email') Email address
-                    input#email.form__input(type='email', placeholder='you@example.com', required)
-                .form__group.ma-bt-md
-                    label.form__label(for='password') Password
-                    input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
-                .form__group
-                    button.btn.btn--green Login
+block content
+  main.main
+    .auth-shell
+      .auth-card
+        .auth-card__header
+          span.badge.badge--mint
+            span.badge__dot
+            | Welcome back
+          h1.type-headline-lg Log into your account
+          p.type-body-sm.text-muted Access your booked expeditions and traveler profile.
+
+        form.form.form--login
+          .form-group
+            label.form-label(for='email') Email address
+            input#email.input(
+              type='email',
+              placeholder='you@example.com',
+              required,
+              autocomplete='email'
+            )
+          .form-group
+            label.form-label(for='password') Password
+            input#password.input(
+              type='password',
+              placeholder='••••••••',
+              required,
+              minlength='8',
+              autocomplete='current-password'
+            )
+          button.btn.btn--primary.btn--full(type='submit') Log in
+
+        .auth-card__footer
+          p.type-body-sm.text-muted
+            | New to Natours?
+            |
+            a.text-primary(href='/signup') Create an account

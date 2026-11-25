@@ -4,6 +4,7 @@ node_modules/
 !.env.example
 .gemini/
 .agent/
+docs
 
 # Build outputs
 dist/

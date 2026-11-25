@@ -1,0 +1,91 @@
+mixin accountShell(activeNav, user, sectionTitle)
+  main.main.dashboard-page
+    .container
+      nav.dashboard-breadcrumb(aria-label='Breadcrumb')
+        a.type-caption(href='/') Home
+        span.dashboard-breadcrumb__sep /
+        a.type-caption(href='/me') Account
+        if sectionTitle
+          span.dashboard-breadcrumb__sep /
+          span.type-caption.dashboard-breadcrumb__current= sectionTitle
+
+      .dashboard-shell
+        .dashboard-grid
+          aside.dashboard-sidebar(aria-label='Account navigation')
+            .user-mini-card
+              img.user-mini-card__avatar(
+                src=`/img/users/${user.photo}`,
+                alt=`Photo of ${user.name}`
+              )
+              .user-mini-card__meta
+                h2.user-mini-card__name.type-headline-sm= user.name
+                span.badge.badge--mint.type-label-caps= user.role
+                p.user-mini-card__email.type-caption= user.email
+
+            nav.side-nav
+              p.side-nav__heading.type-label-caps Account
+              ul.side-nav__list
+                li
+                  a.side-nav__link(
+                    href='/me',
+                    class=activeNav === 'settings' ? 'side-nav__link--active' : ''
+                  )
+                    span.material-symbols-outlined settings
+                    span Settings
+                li
+                  a.side-nav__link(
+                    href='/my-bookings',
+                    class=activeNav === 'bookings' ? 'side-nav__link--active' : ''
+                  )
+                    span.material-symbols-outlined luggage
+                    span My bookings
+                li
+                  a.side-nav__link(
+                    href='/my-reviews',
+                    class=activeNav === 'reviews' ? 'side-nav__link--active' : ''
+                  )
+                    span.material-symbols-outlined rate_review
+                    span My reviews
+                li
+                  a.side-nav__link(
+                    href='/billing',
+                    class=activeNav === 'billing' ? 'side-nav__link--active' : ''
+                  )
+                    span.material-symbols-outlined receipt_long
+                    span Billing
+
+              if user && (user.role === 'admin' || user.role === 'lead-guide')
+                p.side-nav__heading.type-label-caps Admin Portal
+                ul.side-nav__list
+                  li
+                    a.side-nav__link(
+                      href='/admin/tours',
+                      class=activeNav === 'admin-tours' ? 'side-nav__link--active' : ''
+                    )
+                      span.material-symbols-outlined terrain
+                      span Manage tours
+                  if user.role === 'admin'
+                    li
+                      a.side-nav__link(
+                        href='/admin/users',
+                        class=activeNav === 'admin-users' ? 'side-nav__link--active' : ''
+                      )
+                        span.material-symbols-outlined group
+                        span Manage users
+                    li
+                      a.side-nav__link(
+                        href='/admin/reviews',
+                        class=activeNav === 'admin-reviews' ? 'side-nav__link--active' : ''
+                      )
+                        span.material-symbols-outlined reviews
+                        span Manage reviews
+                  li
+                    a.side-nav__link(
+                      href='/admin/bookings',
+                      class=activeNav === 'admin-bookings' ? 'side-nav__link--active' : ''
+                    )
+                      span.material-symbols-outlined confirmation_number
+                      span Manage bookings
+
+          section.dashboard-content
+            block

@@ -2,88 +2,152 @@ extends base
 include _reviewCard
 
 block append head
-    script(src='https://js.stripe.com/v3/')
+  script(src='https://js.stripe.com/v3/')
 
-mixin overviewBox(label, text, icon)
-    .overview-box__detail
-        svg.overview-box__icon
-            use(xlink:href=`/img/icons.svg#icon-${icon}`)
-        span.overview-box__label= label
-        span.overview-box__text= text
+mixin factItem(icon, label, value)
+  .fact-item
+    span.material-symbols-outlined.text-primary(aria-hidden='true')= icon
+    div
+      p.type-label-caps.text-muted= label
+      p.type-body-md.text-heading= value
 
-block content   
-    section.section-header
-        .header__hero
-            .header__hero-overlay &nbsp;
-            img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+block content
+  - const nextDate = tour.startDates && tour.startDates[0] ? new Date(tour.startDates[0]).toLocaleString('en-US', { month: 'long', year: 'numeric' }) : 'TBA';
+  - const sortedLocations = [...(tour.locations || [])].sort((a, b) => (a.day || 0) - (b.day || 0));
 
-        .heading-box
-            h1.heading-primary
-                span= `${tour.name} tour`
-            .heading-box__group
-                .heading-box__detail
-                    svg.heading-box__icon
-                        use(xlink:href='/img/icons.svg#icon-clock')
-                    span.heading-box__text=`${tour.duration} days`
-                .heading-box__detail
-                    svg.heading-box__icon
-                        use(xlink:href='/img/icons.svg#icon-map-pin')
-                    span.heading-box__text= tour.startLocation.description
-                
-    section.section-description
-        .overview-box
-            div
-                .overview-box__group
-                    h2.heading-secondary.ma-bt-lg Quick facts
+  main.main
+    section.tour-hero
+      img.tour-hero__bg(
+        src=`/img/tours/${tour.imageCover}`,
+        alt=tour.name
+      )
+      .tour-hero__scrim
+      .tour-hero__content
+        .container
+          span.badge.badge--mint
+            span.badge__dot
+            = `${tour.difficulty} · ${tour.duration} days`
+          h1.type-display-hero= `${tour.name} Tour`
+          .tour-hero__facts
+            .tour-hero__fact
+              span.material-symbols-outlined(aria-hidden='true') schedule
+              span= `${tour.duration} days`
+            .tour-hero__fact
+              span.material-symbols-outlined(aria-hidden='true') location_on
+              span= (tour.startLocation && tour.startLocation.description) || 'TBA'
+            .tour-hero__fact
+              span.material-symbols-outlined(aria-hidden='true') calendar_today
+              span= nextDate
+            .tour-hero__fact
+              span.material-symbols-outlined(aria-hidden='true') group
+              span= `${tour.maxGroupSize} people`
 
-                    - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+    section.section
+      .container
+        .tour-facts-guides
+          div
+            h2.type-headline-md Quick facts
+            .fact-list
+              +factItem('calendar_today', 'Next date', nextDate)
+              +factItem('trending_up', 'Difficulty', tour.difficulty)
+              +factItem('group', 'Participants', `${tour.maxGroupSize} people`)
+              +factItem('star', 'Rating', `${tour.ratingsAverage} / 5 (${tour.ratingsQuantity})`)
 
-                    +overviewBox('Next date', date, 'calendar')
-                    +overviewBox('Difficulty', tour.difficulty, 'trending-up')
-                    +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
-                    +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
-            
-                .overview-box__group
-                    h2.heading-secondary.ma-bt-lg Your tour guides
+            .side-nav__section
+              h2.type-headline-md Your tour guides
+              .guide-list
+                each guide in (tour.guides || [])
+                  .guide-item
+                    img.guide-item__avatar(
+                      src=`/img/users/${guide.photo}`,
+                      alt=guide.name
+                    )
+                    div
+                      p.type-label-caps.text-primary= guide.role === 'lead-guide' ? 'Lead guide' : 'Tour guide'
+                      p.type-body-md.text-heading= guide.name
 
-                    each guide in tour.guides
-                        .overview-box__detail
-                            img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
-                            
-                            - if(guide.role === 'lead-guide')
-                                span.overview-box__label lead guide
-                            - if(guide.role === 'guide')
-                                span.overview-box__label tour guide
-                            span.overview-box__text= guide.name
-                    
-        .description-box
-            h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
-            - const paragraphs = tour.description.split('\n')
+          div
+            h2.type-headline-lg= `About ${tour.name} tour`
+            - const paragraphs = (tour.description || '').split('\n').filter(Boolean);
             each p in paragraphs
-                p.description__text= p
+              p.type-body-lg= p
 
-    section.section-pictures
-        each img, i in tour.images
-            .picture-box
-                img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
-    //- section.section-map
-    //-     #map(data-locations = `${JSON.stringify(tour.locations)}`)
+    if tour.images && tour.images.length
+      section.section
+        .container
+          .visual-diary
+            each img, i in tour.images
+              .visual-diary__item
+                img.visual-diary__img(
+                  src=`/img/tours/${img}`,
+                  alt=`${tour.name} photo ${i + 1}`,
+                  loading='lazy'
+                )
 
-    section.section-reviews
-        .reviews
+    section.section
+      .container
+        .route-card
+          span.badge.badge--mint
+            span.badge__dot
+            | Expedition Route
+          h2.type-headline-lg Expedition Route & Waypoints
+          if tour.startLocation && tour.startLocation.address
+            p.type-body-md= tour.startLocation.address
+
+          .route-card__grid
+            if tour.startLocation
+              .waypoint-card
+                span.waypoint-pin Start
+                div
+                  p.type-headline-sm= tour.startLocation.description || 'Starting Point'
+                  if tour.startLocation.coordinates && tour.startLocation.coordinates.length >= 2
+                    p.waypoint-coords.type-caption= `${tour.startLocation.coordinates[1].toFixed(4)}°, ${tour.startLocation.coordinates[0].toFixed(4)}°`
+
+            each loc, idx in sortedLocations
+              .waypoint-card
+                span.waypoint-pin= `D${loc.day || idx + 1}`
+                div
+                  p.type-headline-sm= loc.description
+                  if loc.coordinates && loc.coordinates.length >= 2
+                    p.waypoint-coords.type-caption= `${loc.coordinates[1].toFixed(4)}°, ${loc.coordinates[0].toFixed(4)}°`
+
+    section.section
+      .container
+        .reviews-header
+          div
+            span.type-label-caps.text-primary Verified Travelers
+            h2.type-headline-lg Traveler Reviews
+          .reviews-nav
+            button#prevReview.btn.btn--secondary.btn--sm(
+              type='button',
+              aria-label='Previous reviews'
+            )
+              span.material-symbols-outlined(aria-hidden='true') arrow_back
+            button#nextReview.btn.btn--secondary.btn--sm(
+              type='button',
+              aria-label='Next reviews'
+            )
+              span.material-symbols-outlined(aria-hidden='true') arrow_forward
+
+        if tour.reviews && tour.reviews.length
+          #reviewTrack.reviews-track
             each review in tour.reviews
-                +reviewCard(review)
+              +reviewCard(review)
+        else
+          .empty-state
+            p.type-body-md.text-muted No reviews yet for this expedition.
 
-    section.section-cta
-        .cta
-            .cta__img.cta__img--logo
-                img(src='/img/logo-white.png', alt='Natours logo')
-            img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='Tour pic')
-            img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='Tour pic')
-            .cta__content
-                h2.heading-secondary What are you waiting for?
-                p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-                if user
-                    button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
-                else
-                    a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
+  section#booking-cta.booking-cta
+    .container.booking-cta__inner
+      div
+        p.type-headline-md= `$${tour.price} per person`
+        p.type-body-sm.text-muted= `${tour.duration} days · ${tour.maxGroupSize} max travelers · Instant confirmation`
+      div
+        if user
+          button#book-tour.btn.btn--primary(
+            type='button',
+            data-tour-id=`${tour.id}`,
+            data-stripe-key=stripePublicKey || ''
+          ) Book tour now!
+        else
+          a.btn.btn--primary(href='/login') Log in to book tour

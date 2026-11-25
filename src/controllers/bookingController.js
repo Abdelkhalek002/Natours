@@ -14,7 +14,7 @@ export const getCheckoutSession = catchAsync(async (req, res, next) => {
   // 2) create checkout session
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
-    payment_method_types: ['card'],
+    allowed_payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourID}&user=${req.user.id}&price=${tour.price}`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
@@ -46,6 +46,22 @@ export const createBookingCheckout = catchAsync(async (req, res, next) => {
   if (!tour && !user && !price) return next();
   await Booking.create({ tour, user, price });
   res.redirect(req.originalUrl.split('?')[0]);
+});
+
+// Authenticated user's own bookings
+export const getMyBookings = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find({ user: req.user.id }).populate({
+    path: 'tour',
+    select: 'name slug imageCover duration startDates startLocation price guides',
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: bookings.length,
+    data: {
+      bookings,
+    },
+  });
 });
 
 // Admin controlled CRUD

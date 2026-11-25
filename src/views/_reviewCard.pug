@@ -1,10 +1,18 @@
 mixin reviewCard(review)
-    .reviews__card
-        .reviews__avatar
-            img.reviews__avatar-img(src=`/img/users/${review.user.photo}`, alt=`${review.user.name}`)
-            h6.reviews__user= review.user.name
-        p.reviews__text= review.review
-        .reviews__rating
-            each star in [1, 2, 3, 4, 5]
-                svg.reviews__star(class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
-                    use(xlink:href='/img/icons.svg#icon-star')
+  article.review-card
+    .review-card__user
+      img.review-card__avatar(
+        src=`/img/users/${review.user && review.user.photo ? review.user.photo : 'default.jpg'}`,
+        alt=review.user ? review.user.name : 'Traveler'
+      )
+      div
+        h3.type-headline-sm= review.user ? review.user.name : 'Traveler'
+        if review.createdAt
+          p.type-caption.text-muted= new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    p.type-body-md= review.review
+    .review-card__stars(aria-label=`Rated ${review.rating} out of 5`)
+      each star in [1, 2, 3, 4, 5]
+        span.material-symbols-outlined(
+          class=review.rating >= star ? 'icon--filled' : 'text-muted',
+          aria-hidden='true'
+        ) star

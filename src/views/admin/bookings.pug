@@ -1,0 +1,161 @@
+extends ../base
+include ../_accountShell
+
+block content
+  +accountShell('admin-bookings', user, 'Manage Bookings')
+    .stats-row
+      .stat-card
+        span.type-label-caps Total Bookings
+        span.type-headline-md= (stats && stats.totalBookings) || 0
+      .stat-card
+        span.type-label-caps Gross Revenue
+        span.type-headline-md= `$${((stats && stats.grossRevenue) || 0).toLocaleString('en-US')}`
+      .stat-card
+        span.type-label-caps Paid
+        span.type-headline-md= (stats && stats.paidCount) || 0
+      .stat-card
+        span.type-label-caps Unpaid
+        span.type-headline-md= (stats && stats.unpaidCount) || 0
+
+    .admin-toolbar
+      form.admin-toolbar__filters(method='GET', action='/admin/bookings')
+        select.select(name='paid')
+          option(value='') All statuses
+          option(value='true', selected=filters && filters.paid === 'true') Paid
+          option(value='false', selected=filters && filters.paid === 'false') Unpaid
+        button.btn.btn--secondary.btn--sm(type='submit')
+          span.material-symbols-outlined filter_list
+          span Filter
+        if filters && filters.paid
+          a.btn.btn--ghost.btn--sm(href='/admin/bookings') Clear
+
+      button#btn-new-booking.btn.btn--primary.btn--sm(
+        type='button',
+        data-modal-open='modal-booking-form'
+      )
+        span.material-symbols-outlined add
+        span New Booking
+
+    if bookings && bookings.length
+      .table-wrap
+        table.data-table
+          thead
+            tr
+              th Tour
+              th Customer
+              th Price
+              th Status
+              th Date
+              th Actions
+          tbody
+            each b in bookings
+              - const tourId = b.tour && b.tour._id ? String(b.tour._id) : String(b.tour || '');
+              - const userId = b.user && b.user._id ? String(b.user._id) : String(b.user || '');
+              - const bookingPayload = JSON.stringify({ _id: b._id, tour: tourId, user: userId, price: b.price, paid: Boolean(b.paid) });
+              tr
+                td.type-title-sm= (b.tour && b.tour.name) || 'Tour'
+                td
+                  div
+                    .type-title-sm= (b.user && b.user.name) || 'User'
+                    if b.user && b.user.email
+                      .type-caption= b.user.email
+                td.type-mono= `$${b.price}`
+                td
+                  span.badge.type-label-caps(class=b.paid ? 'badge--mint' : 'badge--warning')= b.paid ? 'Paid' : 'Unpaid'
+                td.type-caption= b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''
+                td
+                  .table-actions
+                    button.btn.btn--ghost.btn--sm.js-edit-booking(
+                      type='button',
+                      data-booking=bookingPayload,
+                      aria-label='Edit booking'
+                    )
+                      span.material-symbols-outlined edit
+                      span Edit
+                    button.btn.btn--danger.btn--sm.js-delete-booking(
+                      type='button',
+                      data-id=b._id,
+                      data-name=(b.tour && b.tour.name) || 'this booking',
+                      aria-label='Delete booking'
+                    )
+                      span.material-symbols-outlined delete
+    else
+      .empty-state
+        span.material-symbols-outlined confirmation_number
+        h3.type-headline-sm No bookings found
+        p.type-body-sm Try adjusting your filter or create a new booking.
+
+    if pagination && pagination.totalPages > 1
+      .pagination
+        p.type-caption= `Page ${pagination.currentPage} of ${pagination.totalPages} (${pagination.totalItems} bookings)`
+        .pagination__controls
+          - const baseParams = `paid=${encodeURIComponent((filters && filters.paid) || '')}`;
+          if pagination.currentPage > 1
+            a.pagination__btn(href=`/admin/bookings?page=${pagination.currentPage - 1}&${baseParams}`) Prev
+          - for (let p = 1; p <= pagination.totalPages; p += 1)
+            a.pagination__btn(
+              href=`/admin/bookings?page=${p}&${baseParams}`,
+              class=p === pagination.currentPage ? 'pagination__btn--active' : ''
+            )= p
+          if pagination.currentPage < pagination.totalPages
+            a.pagination__btn(href=`/admin/bookings?page=${pagination.currentPage + 1}&${baseParams}`) Next
+
+    #modal-booking-form.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='booking-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#booking-modal-title.type-headline-sm Create Booking
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        form#admin-booking-form
+          input#booking-id(type='hidden', name='id')
+          .form-group
+            label.form-label(for='booking-tour') Tour
+            select#booking-tour.select(name='tour', required)
+              option(value='') Select a tour
+              if tours && tours.length
+                each t in tours
+                  option(value=t._id, data-price=t.price)= `${t.name} ($${t.price})`
+          .form-group
+            label.form-label(for='booking-user') Customer
+            select#booking-user.select(name='user', required)
+              option(value='') Select a customer
+              if users && users.length
+                each u in users
+                  option(value=u._id)= `${u.name} (${u.email})`
+          .form-group
+            label.form-label(for='booking-price') Price ($)
+            input#booking-price.input(type='number', name='price', required, min='0', step='1')
+          .form-group
+            label.form-label(for='booking-paid') Payment Status
+            select#booking-paid.select(name='paid')
+              option(value='true') Paid
+              option(value='false') Unpaid
+          .modal__footer
+            button.btn.btn--ghost(type='button', data-modal-close) Cancel
+            button#booking-submit-btn.btn.btn--primary(type='submit') Save Booking
+
+    #modal-confirm-delete.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='delete-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#delete-modal-title.type-headline-sm Confirm Deletion
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        p.type-body-sm
+          | Are you sure you want to delete the booking for 
+          strong#confirm-delete-name this booking
+          | ? This action cannot be undone.
+        .modal__footer
+          button.btn.btn--ghost(type='button', data-modal-close) Cancel
+          button#confirm-delete-btn.btn.btn--danger(type='button') Delete

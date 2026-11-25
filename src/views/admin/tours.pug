@@ -1,0 +1,187 @@
+extends ../base
+include ../_accountShell
+
+block content
+  +accountShell('admin-tours', user, 'Manage Tours')
+    .admin-toolbar
+      form.admin-toolbar__filters(method='GET', action='/admin/tours')
+        input.input(
+          type='search',
+          name='search',
+          placeholder='Search tours by name...',
+          value=(filters && filters.search) || ''
+        )
+        select.select(name='difficulty')
+          option(value='') All difficulties
+          each diff in ['easy', 'medium', 'difficult']
+            option(
+              value=diff,
+              selected=filters && filters.difficulty === diff
+            )= diff.charAt(0).toUpperCase() + diff.slice(1)
+        button.btn.btn--secondary.btn--sm(type='submit')
+          span.material-symbols-outlined filter_list
+          span Filter
+        if filters && (filters.search || filters.difficulty)
+          a.btn.btn--ghost.btn--sm(href='/admin/tours') Clear
+
+      button#btn-new-tour.btn.btn--primary.btn--sm(
+        type='button',
+        data-modal-open='modal-tour-form'
+      )
+        span.material-symbols-outlined add
+        span New Tour
+
+    if tours && tours.length
+      .table-wrap
+        table.data-table
+          thead
+            tr
+              th Tour
+              th Difficulty
+              th Duration
+              th Group Size
+              th Price
+              th Rating
+              th Actions
+          tbody
+            each tour in tours
+              - const diffBadge = tour.difficulty === 'easy' ? 'badge--mint' : tour.difficulty === 'medium' ? 'badge--warning' : 'badge--error';
+              - const guideIds = (tour.guides || []).map((g) => (g && g._id ? String(g._id) : String(g)));
+              - const startDatesStr = (tour.startDates || []).map((d) => new Date(d).toISOString().slice(0, 10)).join(', ');
+              - const tourPayload = JSON.stringify({ _id: tour._id, name: tour.name, duration: tour.duration, maxGroupSize: tour.maxGroupSize, difficulty: tour.difficulty, price: tour.price, summary: tour.summary, description: tour.description || '', startLocationDescription: (tour.startLocation && tour.startLocation.description) || '', guides: guideIds, startDates: startDatesStr });
+              tr
+                td
+                  .table-entity
+                    img.table-thumb(
+                      src=`/img/tours/${tour.imageCover || 'tour-1-cover.jpg'}`,
+                      alt=tour.name
+                    )
+                    div
+                      .type-title-sm= tour.name
+                      .type-caption= tour.summary
+                td
+                  span.badge.type-label-caps(class=diffBadge)= tour.difficulty
+                td= `${tour.duration} days`
+                td= `${tour.maxGroupSize} people`
+                td.type-mono= `$${tour.price}`
+                td= `${tour.ratingsAverage || 4.5} (${tour.ratingsQuantity || 0})`
+                td
+                  .table-actions
+                    button.btn.btn--ghost.btn--sm.js-edit-tour(
+                      type='button',
+                      data-tour=tourPayload,
+                      aria-label=`Edit ${tour.name}`
+                    )
+                      span.material-symbols-outlined edit
+                      span Edit
+                    button.btn.btn--danger.btn--sm.js-delete-tour(
+                      type='button',
+                      data-id=tour._id,
+                      data-name=tour.name,
+                      aria-label=`Delete ${tour.name}`
+                    )
+                      span.material-symbols-outlined delete
+    else
+      .empty-state
+        span.material-symbols-outlined terrain
+        h3.type-headline-sm No tours found
+        p.type-body-sm Try adjusting your filters or create a new tour.
+
+    if pagination && pagination.totalPages > 1
+      .pagination
+        p.type-caption= `Page ${pagination.currentPage} of ${pagination.totalPages} (${pagination.totalItems} tours)`
+        .pagination__controls
+          - const baseParams = `search=${encodeURIComponent((filters && filters.search) || '')}&difficulty=${encodeURIComponent((filters && filters.difficulty) || '')}`;
+          if pagination.currentPage > 1
+            a.pagination__btn(href=`/admin/tours?page=${pagination.currentPage - 1}&${baseParams}`) Prev
+          - for (let p = 1; p <= pagination.totalPages; p += 1)
+            a.pagination__btn(
+              href=`/admin/tours?page=${p}&${baseParams}`,
+              class=p === pagination.currentPage ? 'pagination__btn--active' : ''
+            )= p
+          if pagination.currentPage < pagination.totalPages
+            a.pagination__btn(href=`/admin/tours?page=${pagination.currentPage + 1}&${baseParams}`) Next
+
+    #modal-tour-form.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='tour-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#tour-modal-title.type-headline-sm Create Tour
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        form#admin-tour-form
+          input#tour-id(type='hidden', name='id')
+          .form-group
+            label.form-label(for='tour-name') Tour Name
+            input#tour-name.input(type='text', name='name', required, minlength='10', maxlength='55')
+          .form-group
+            label.form-label(for='tour-duration') Duration (days)
+            input#tour-duration.input(type='number', name='duration', required, min='1')
+          .form-group
+            label.form-label(for='tour-max-group') Max Group Size
+            input#tour-max-group.input(type='number', name='maxGroupSize', required, min='1')
+          .form-group
+            label.form-label(for='tour-difficulty') Difficulty
+            select#tour-difficulty.select(name='difficulty', required)
+              option(value='easy') Easy
+              option(value='medium') Medium
+              option(value='difficult') Difficult
+          .form-group
+            label.form-label(for='tour-price') Price ($)
+            input#tour-price.input(type='number', name='price', required, min='0', step='1')
+          .form-group
+            label.form-label(for='tour-summary') Summary
+            input#tour-summary.input(type='text', name='summary', required)
+          .form-group
+            label.form-label(for='tour-description') Description
+            textarea#tour-description.textarea(name='description', rows='3')
+          .form-group
+            label.form-label(for='tour-start-location') Start Location Description
+            input#tour-start-location.input(type='text', name='startLocation.description')
+          .form-group
+            label.form-label(for='tour-guides') Guides
+            select#tour-guides.select(name='guides', multiple)
+              if guides && guides.length
+                each guide in guides
+                  option(value=guide._id)= `${guide.name} (${guide.role})`
+          .form-group
+            label.form-label(for='tour-start-dates') Start Dates (comma-separated YYYY-MM-DD)
+            input#tour-start-dates.input(
+              type='text',
+              name='startDates',
+              placeholder='2026-06-15, 2026-07-20'
+            )
+          .form-group
+            label.form-label(for='tour-image-cover') Cover Image
+            input#tour-image-cover.input(type='file', name='imageCover', accept='image/*')
+          .form-group
+            label.form-label(for='tour-images') Gallery Images (up to 3)
+            input#tour-images.input(type='file', name='images', accept='image/*', multiple)
+          .modal__footer
+            button.btn.btn--ghost(type='button', data-modal-close) Cancel
+            button#tour-submit-btn.btn.btn--primary(type='submit') Save Tour
+
+    #modal-confirm-delete.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='delete-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#delete-modal-title.type-headline-sm Confirm Deletion
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        p.type-body-sm
+          | Are you sure you want to delete 
+          strong#confirm-delete-name this tour
+          | ? This action cannot be undone.
+        .modal__footer
+          button.btn.btn--ghost(type='button', data-modal-close) Cancel
+          button#confirm-delete-btn.btn.btn--danger(type='button') Delete

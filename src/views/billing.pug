@@ -1,0 +1,78 @@
+extends base
+include _accountShell
+
+block content
+  - const bookingList = Array.isArray(bookings) ? bookings : [];
+  - const count = totalCount != null ? totalCount : bookingList.length;
+  - const spent = Number(totalSpent || 0);
+
+  +accountShell('billing', user, 'Billing')
+    .booking-card__top
+      div
+        h1.type-headline-md.text-heading Billing & receipts
+        p.type-body-sm.text-muted Review your expedition payments and export receipts for your records.
+      .receipt-actions.no-print
+        button#btn-export-csv.btn.btn--secondary.btn--sm(
+          type='button',
+          disabled=bookingList.length === 0
+        )
+          span.material-symbols-outlined download
+          span Export CSV
+        button#btn-print-receipts.btn.btn--primary.btn--sm(
+          type='button',
+          disabled=bookingList.length === 0
+        )
+          span.material-symbols-outlined print
+          span Print Receipt
+
+    .stats-row
+      .stat-card
+        span.type-label-caps.text-muted Total Expeditions
+        span.type-headline-lg.text-heading= count
+      .stat-card
+        span.type-label-caps.text-muted Total Spent
+        span.type-headline-lg.text-primary= `$${spent.toLocaleString('en-US')}`
+
+    if bookingList.length > 0
+      .table-wrap
+        table#billing-table.data-table
+          thead
+            tr
+              th Date
+              th Expedition
+              th Status
+              th Amount
+              th Receipt
+          tbody
+            each booking in bookingList
+              - const tour = booking.tour || {};
+              - const receiptId = `INV-${String(booking._id || booking.id || '').slice(-6).toUpperCase()}`;
+              - const formattedDate = booking.createdAt ? new Date(booking.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+              - const isPaid = booking.paid !== false;
+              - const statusText = isPaid ? 'Paid' : 'Pending';
+              - const amount = Number(booking.price || tour.price || 0);
+              tr(
+                data-receipt=receiptId,
+                data-date=formattedDate,
+                data-tour=tour.name || 'Expedition',
+                data-status=statusText,
+                data-amount=`$${amount}`
+              )
+                td.type-label-numeric= formattedDate
+                td
+                  if tour.slug
+                    a.text-heading(href=`/tour/${tour.slug}`)= tour.name || 'Expedition'
+                  else
+                    span.text-heading= tour.name || 'Expedition'
+                td
+                  span.badge(class=isPaid ? 'badge--mint' : 'badge--warning')
+                    span.badge__dot
+                    span= statusText
+                td.type-label-numeric.text-heading= `$${amount.toLocaleString('en-US')}`
+                td.type-label-numeric.text-muted= `#${receiptId}`
+    else
+      .empty-state
+        span.material-symbols-outlined.text-muted receipt_long
+        h2.type-headline-sm.text-heading No payment history yet
+        p.type-body-sm.text-muted Receipts will appear here once you book your first expedition.
+        a.btn.btn--primary.btn--sm(href='/') Explore Tours

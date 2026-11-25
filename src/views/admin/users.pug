@@ -1,0 +1,160 @@
+extends ../base
+include ../_accountShell
+
+block content
+  +accountShell('admin-users', user, 'Manage Users')
+    .stats-row
+      .stat-card
+        span.type-label-caps Total Users
+        span.type-headline-md= (stats && stats.totalUsers) || 0
+      .stat-card
+        span.type-label-caps Travelers
+        span.type-headline-md= (stats && stats.travelersCount) || 0
+      .stat-card
+        span.type-label-caps Guides
+        span.type-headline-md= (stats && stats.guidesCount) || 0
+      .stat-card
+        span.type-label-caps Admins
+        span.type-headline-md= (stats && stats.adminsCount) || 0
+
+    .admin-toolbar
+      form.admin-toolbar__filters(method='GET', action='/admin/users')
+        input.input(
+          type='search',
+          name='search',
+          placeholder='Search by name or email...',
+          value=(filters && filters.search) || ''
+        )
+        select.select(name='role')
+          option(value='') All roles
+          each r in ['user', 'guide', 'lead-guide', 'admin']
+            option(
+              value=r,
+              selected=filters && filters.role === r
+            )= r
+        button.btn.btn--secondary.btn--sm(type='submit')
+          span.material-symbols-outlined filter_list
+          span Filter
+        if filters && (filters.search || filters.role)
+          a.btn.btn--ghost.btn--sm(href='/admin/users') Clear
+
+    if users && users.length
+      .table-wrap
+        table.data-table
+          thead
+            tr
+              th User
+              th Email
+              th Role
+              th Status
+              th Actions
+          tbody
+            each u in users
+              - const roleBadge = u.role === 'admin' ? 'badge--dark' : u.role === 'lead-guide' || u.role === 'guide' ? 'badge--mint' : 'badge--warning';
+              - const isActive = u.active !== false;
+              - const userPayload = JSON.stringify({ _id: u._id, name: u.name, email: u.email, role: u.role, active: isActive });
+              tr
+                td
+                  .table-entity
+                    img.user-mini-card__avatar(
+                      src=`/img/users/${u.photo || 'default.jpg'}`,
+                      alt=u.name
+                    )
+                    span.type-title-sm= u.name
+                td= u.email
+                td
+                  span.badge.type-label-caps(class=roleBadge)= u.role
+                td
+                  span.badge.type-label-caps(class=isActive ? 'badge--mint' : 'badge--error')= isActive ? 'Active' : 'Inactive'
+                td
+                  .table-actions
+                    button.btn.btn--ghost.btn--sm.js-edit-user(
+                      type='button',
+                      data-user=userPayload,
+                      aria-label=`Edit ${u.name}`
+                    )
+                      span.material-symbols-outlined edit
+                      span Edit
+                    button.btn.btn--danger.btn--sm.js-delete-user(
+                      type='button',
+                      data-id=u._id,
+                      data-name=u.name,
+                      aria-label=`Delete ${u.name}`
+                    )
+                      span.material-symbols-outlined delete
+    else
+      .empty-state
+        span.material-symbols-outlined group
+        h3.type-headline-sm No users found
+        p.type-body-sm Try adjusting your search or role filter.
+
+    if pagination && pagination.totalPages > 1
+      .pagination
+        p.type-caption= `Page ${pagination.currentPage} of ${pagination.totalPages} (${pagination.totalItems} users)`
+        .pagination__controls
+          - const baseParams = `search=${encodeURIComponent((filters && filters.search) || '')}&role=${encodeURIComponent((filters && filters.role) || '')}`;
+          if pagination.currentPage > 1
+            a.pagination__btn(href=`/admin/users?page=${pagination.currentPage - 1}&${baseParams}`) Prev
+          - for (let p = 1; p <= pagination.totalPages; p += 1)
+            a.pagination__btn(
+              href=`/admin/users?page=${p}&${baseParams}`,
+              class=p === pagination.currentPage ? 'pagination__btn--active' : ''
+            )= p
+          if pagination.currentPage < pagination.totalPages
+            a.pagination__btn(href=`/admin/users?page=${pagination.currentPage + 1}&${baseParams}`) Next
+
+    #modal-user-form.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='user-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#user-modal-title.type-headline-sm Edit User
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        form#admin-user-form
+          input#user-id(type='hidden', name='id')
+          .form-group
+            label.form-label(for='user-name') Name
+            input#user-name.input(type='text', name='name', required)
+          .form-group
+            label.form-label(for='user-email') Email
+            input#user-email.input(type='email', name='email', required)
+          .form-group
+            label.form-label(for='user-role') Role
+            select#user-role.select(name='role', required)
+              option(value='user') User
+              option(value='guide') Guide
+              option(value='lead-guide') Lead Guide
+              option(value='admin') Admin
+          .form-group
+            label.form-label(for='user-active') Status
+            select#user-active.select(name='active')
+              option(value='true') Active
+              option(value='false') Inactive
+          .modal__footer
+            button.btn.btn--ghost(type='button', data-modal-close) Cancel
+            button.btn.btn--primary(type='submit') Save Changes
+
+    #modal-confirm-delete.modal-backdrop(
+      hidden,
+      aria-hidden='true',
+      role='dialog',
+      aria-modal='true',
+      aria-labelledby='delete-modal-title'
+    )
+      .modal-panel
+        .modal__header
+          h2#delete-modal-title.type-headline-sm Confirm Deletion
+          button.modal__close(type='button', data-modal-close, aria-label='Close modal')
+            span.material-symbols-outlined close
+        p.type-body-sm
+          | Are you sure you want to delete 
+          strong#confirm-delete-name this user
+          | ? This action cannot be undone.
+        .modal__footer
+          button.btn.btn--ghost(type='button', data-modal-close) Cancel
+          button#confirm-delete-btn.btn.btn--danger(type='button') Delete

@@ -1,21 +1,55 @@
 extends base
 
-block content 
-    main.main
-        .signup-form
-            h2.heading-secondary.ma-bt-lg Create Your Account!
-            form.form.form--signup
-                .form__group
-                    label.form__label(for='name') Name
-                    input#name.form__input(type='text', placeholder='your name', required)
-                .form__group
-                    label.form__label(for='email') Email address
-                    input#email.form__input(type='email', placeholder='you@example.com', required)
-                .form__group.ma-bt-md
-                    label.form__label(for='password') Password
-                    input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
-                .form__group.ma-bt-md
-                    label.form__label(for='passwordConfirm') Confirm Password
-                    input#passwordConfirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
-                .form__group
-                    button.btn.btn--green Sign Up
+block content
+  main.main
+    .auth-shell
+      .auth-card
+        .auth-card__header
+          span.badge.badge--mint
+            span.badge__dot
+            | Join Natours
+          h1.type-headline-lg Create your account
+          p.type-body-sm.text-muted Start booking curated alpine and global expeditions.
+
+        form.form.form--signup
+          .form-group
+            label.form-label(for='name') Full name
+            input#name.input(
+              type='text',
+              placeholder='Your name',
+              required,
+              autocomplete='name'
+            )
+          .form-group
+            label.form-label(for='email') Email address
+            input#email.input(
+              type='email',
+              placeholder='you@example.com',
+              required,
+              autocomplete='email'
+            )
+          .form-group
+            label.form-label(for='password') Password
+            input#password.input(
+              type='password',
+              placeholder='••••••••',
+              required,
+              minlength='8',
+              autocomplete='new-password'
+            )
+          .form-group
+            label.form-label(for='passwordConfirm') Confirm password
+            input#passwordConfirm.input(
+              type='password',
+              placeholder='••••••••',
+              required,
+              minlength='8',
+              autocomplete='new-password'
+            )
+          button.btn.btn--primary.btn--full(type='submit') Sign up
+
+        .auth-card__footer
+          p.type-body-sm.text-muted
+            | Already have an account?
+            |
+            a.text-primary(href='/login') Log in
