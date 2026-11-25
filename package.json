@@ -21,6 +21,7 @@
     "watch": "npm run dev",
     "watch:server": "nodemon src/server.js",
     "watch:js": "parcel watch ./public/js/index.js --target app",
+    "build": "npm run build:js",
     "build:js": "parcel build ./public/js/index.js --target app",
     "data:import": "node dev-data/data/import-dev-data.js --import",
     "data:delete": "node dev-data/data/import-dev-data.js --delete"

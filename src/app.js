@@ -24,6 +24,8 @@ const __dirname = path.dirname(__filename);
 // Start Express App
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
